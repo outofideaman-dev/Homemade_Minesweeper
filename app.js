@@ -294,19 +294,19 @@ function checkBoardCleared() {
 // ----- Quiz (Defuse) -----
 function startQuiz(x, y) {
   if (!questions.length) { alert("Chưa có bộ câu hỏi. Hãy tải file .txt hoặc dùng mặc định."); return; }
-  // Hết câu hỏi → kết thúc game luôn (phòng khi click mìn sau câu cuối)
+  // Nếu đã hết câu hỏi mà vẫn click vào mìn, kết thúc game luôn
   if (qIndex >= questions.length) { endGame(); return; }
 
   inQuiz = true;
   pendingCell = { x, y };
 
-  const q = questions[qIndex];              // <-- lấy theo thứ tự
+  const q = questions[qIndex];          // lấy theo thứ tự
   const letters = ["A","B","C","D"];
   const optsArr = letters
     .map(L => ({ label: L, text: (q.options?.[L] || "").trim(), correct: (L === q.answer) }))
     .filter(o => o.text.length > 0);
 
-  // (giữ shuffle vị trí lựa chọn nếu bạn muốn) 
+  // shuffle vị trí lựa chọn (giữ nguyên nếu bạn muốn)
   for (let i = optsArr.length - 1; i > 0; i--) {
     const j = randint(i + 1);
     [optsArr[i], optsArr[j]] = [optsArr[j], optsArr[i]];
@@ -324,21 +324,36 @@ function startQuiz(x, y) {
     const btn = document.createElement("button");
     btn.textContent = `${String.fromCharCode(65 + idx)}. ${opt.text}`;
     btn.dataset.correct = opt.correct ? "1" : "0";
+
     btn.addEventListener("click", () => {
       if (answered) return;
       answered = true;
-      [...quizAnswers.children].forEach(b => b.disabled = true);
-      const current = btn.textContent.replace(/^[XO]\s+/, '');
-      btn.textContent = (btn.dataset.correct === "1" ? `O ${current}` : `X ${current}`);
-      resultKnown = true;
-      finishQuiz(btn.dataset.correct === "1", q.explanation, /*keepOpen*/ true);
+
+      const allBtns = [...quizAnswers.children];
+      allBtns.forEach(b => b.disabled = true);
+
+      if (btn.dataset.correct === "1") {
+        // Chọn đúng -> tô xanh nút đã chọn
+        btn.classList.add("correct");
+        resultKnown = true;
+        finishQuiz(true, q.explanation, /*keepOpen*/ true);
+      } else {
+        // Chọn sai -> tô đỏ nút chọn, tô xanh đáp án đúng
+        btn.classList.add("wrong");
+        const correctBtn = allBtns.find(b => b.dataset.correct === "1");
+        if (correctBtn) correctBtn.classList.add("correct");
+        resultKnown = true;
+        finishQuiz(false, q.explanation, /*keepOpen*/ true);
+      }
     });
+
     quizAnswers.appendChild(btn);
   });
 
+  // Mở popup
   quizBackdrop.style.display = "flex";
 
-  // timer
+  // Timer
   let left = DEFUSE_SECONDS;
   quizTimerEl.textContent = left;
   if (quizTimer) clearInterval(quizTimer);
@@ -347,15 +362,23 @@ function startQuiz(x, y) {
     const elapsed = Math.floor((Date.now() - t0) / 1000);
     left = Math.max(0, DEFUSE_SECONDS - elapsed);
     quizTimerEl.textContent = left;
+
     if (left <= 0) {
       clearInterval(quizTimer);
       if (!resultKnown) {
+        // Hết giờ: khóa nút & tô xanh đáp án đúng để người chơi thấy
+        const allBtns = [...quizAnswers.children];
+        allBtns.forEach(b => b.disabled = true);
+        const correctBtn = allBtns.find(b => b.dataset.correct === "1");
+        if (correctBtn) correctBtn.classList.add("correct");
+
         resultKnown = true;
-        finishQuiz(false, questions[qIndex].explanation, /*keepOpen*/ true);
+        finishQuiz(false, q.explanation, /*keepOpen*/ true);
       }
     }
   }, 200);
 }
+
 
 
 function finishQuiz(success, explanation, keepOpen = true) {
