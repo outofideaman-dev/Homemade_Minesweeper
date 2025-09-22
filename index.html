@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Minesweeper Turn — 16x16</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="left"><strong>Minesweeper Turn</strong></div>
+      <div class="right">
+        <button id="btn-start" class="primary">Bắt đầu lượt</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div id="left">
+        <div class="toolbar">
+          <div class="group">
+            <div class="scoreboard">
+              <div class="team team-white">Trắng: <span id="score-white">0</span></div>
+              <div class="team team-black">Đen: <span id="score-black">0</span></div>
+              <div class="turn">Lượt: <span id="turn-team">Trắng</span></div>
+            </div>
+
+            <div class="badge">
+              Mìn đã gỡ: <b id="defused-count">0</b> / <span id="mine-total">40</span>
+            </div>
+            <div class="badge">
+              Còn: <span id="mine-count">40</span>
+            </div>
+
+          </div>
+          <div class="group">
+            <label>Chế độ:</label>
+            <button id="mode-open" class="primary">Mở ô</button>
+            <button id="mode-flag">Cắm cờ</button>
+            <button id="mode-unflag">Gỡ cờ</button>
+          </div>
+          <div class="group">
+            <input type="file" id="file-questions" accept=".txt" />
+            <button id="btn-reload-questions" title="Tải lại /assets/questions.txt">Tải câu hỏi mặc định</button>
+          </div>
+          <div class="group">
+            <button id="btn-new-board">Bảng mới</button>
+            <button id="btn-end-turn">Kết thúc lượt</button>
+          </div>
+        </div>
+
+        <div class="board-area">
+          <div class="coord-row" id="coord-top"></div>
+          <div class="coord-wrap">
+            <div class="coord-col" id="coord-left"></div>
+            <div id="board" class="board"></div>
+        </div>
+</div>
+
+      </div>
+    </div>
+
+    <div id="quiz-backdrop">
+      <div id="quiz-modal" class="quiz-modal">
+        <div style="display:flex; justify-content: space-between; align-items: center">
+          <h3>Câu hỏi kiểm chứng (30s)</h3>
+          <div class="badge">Còn: <span id="quiz-timer">30</span>s</div>
+        </div>
+        <div id="quiz-content"></div>
+        <div id="quiz-answers"></div>
+        <div id="quiz-explanation"></div>
+        <div class="quiz-footer">
+          <button id="quiz-close-btn">Thoát</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>OwO</footer>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

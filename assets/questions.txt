@@ -1,0 +1,26 @@
+1
+Mặt trời thuộc loại thiên thể nào?
+A. Hành tinh
+B. Sao lùn đỏ
+C. Sao (ngôi sao)
+D. Vệ tinh tự nhiên
+ANSWER: C
+# Mặt trời là một ngôi sao, nó là nguồn sáng chính trong hệ mặt trời.
+
+2
+Thủ đô của Việt Nam là?
+A. Hà Nội
+B. TP. Hồ Chí Minh
+C. Đà Nẵng
+D. Hải Phòng
+ANSWER: A
+# Thủ đô của Việt Nam là Hà Nội, nằm ở phía Bắc đất nước.
+
+3
+2 + 2 bằng mấy?
+A. 3
+B. 4
+C. 5
+D. 22
+ANSWER: B
+# 2 cộng 2 bằng 4, đây là phép toán cộng đơn giản.
