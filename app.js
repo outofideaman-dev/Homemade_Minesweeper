@@ -56,6 +56,36 @@ let turn = 0;                       // 0..4 (Group 1 đi trước)
 let qIndex = 0;             // hỏi lần lượt
 let endGamePending = false; // chỉ alert khi bấm Thoát ở câu cuối
 
+function getTileEl(x, y) {
+  // renderBoard append theo thứ tự y (hàng) rồi x (cột)
+  return boardEl.children[y * SIZE + x];
+}
+
+function clearHighlight() {
+  boardEl.querySelectorAll('.hl').forEach(el => el.classList.remove('hl'));
+  coordTopEl.querySelectorAll('.hl').forEach(el => el.classList.remove('hl'));
+  coordLeftEl.querySelectorAll('.hl').forEach(el => el.classList.remove('hl'));
+}
+
+function highlightCross(x, y) {
+  clearHighlight();
+  // highlight cùng hàng
+  for (let cx = 0; cx < SIZE; cx++) {
+    const el = getTileEl(cx, y);
+    if (el) el.classList.add('hl');
+  }
+  // highlight cùng cột
+  for (let cy = 0; cy < SIZE; cy++) {
+    const el = getTileEl(x, cy);
+    if (el) el.classList.add('hl');
+  }
+  // highlight nhãn tọa độ
+  const colLabel = coordTopEl.children[x];
+  const rowLabel = coordLeftEl.children[y];
+  if (colLabel) colLabel.classList.add('hl');
+  if (rowLabel) rowLabel.classList.add('hl');
+}
+
 // ----- Helpers -----
 function randint(n) { return Math.floor(Math.random() * n); }
 function neighbors(x, y) {
@@ -222,6 +252,14 @@ function renderBoard() {
 
     tile.addEventListener("click", onTileClick);
     tile.addEventListener("contextmenu", (e) => { e.preventDefault(); toggleFlag(tile); });
+    tile.addEventListener("mouseenter", () => {
+  // có thể cho phép hover dù đang inQuiz (chỉ là hiệu ứng),
+  // nếu muốn tắt trong quiz thì if (!inQuiz) highlightCross(x, y);
+  highlightCross(x, y);
+});
+tile.addEventListener("mouseleave", () => {
+  clearHighlight();
+});
     boardEl.appendChild(tile);
   }
 }
@@ -483,4 +521,5 @@ async function startGame() {
 
   newBoard();
 }
+
 
