@@ -11,9 +11,7 @@
   --tile-defused: #1b5e20;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html, body {
   height: 100%;
@@ -35,9 +33,7 @@ header, footer {
   gap: 12px;
 }
 
-header {
-  justify-content: space-between;
-}
+header { justify-content: space-between; }
 
 .container {
   width: 100%;
@@ -66,11 +62,7 @@ header {
   flex-wrap: wrap;
 }
 
-.toolbar .group {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
+.toolbar .group { display: flex; gap: 6px; align-items: center; }
 
 button, .btn {
   background: rgba(255, 255, 255, 0.08);
@@ -81,15 +73,8 @@ button, .btn {
   cursor: pointer;
   transition: transform 0.05s ease, background 0.2s ease;
 }
-
-button:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
+button:hover { background: rgba(255, 255, 255, 0.12); }
+button:active { transform: translateY(1px); }
 button.primary {
   background: var(--accent);
   border-color: transparent;
@@ -113,6 +98,7 @@ input, select {
   padding: 8px 10px;
 }
 
+/* ===== Board ===== */
 .board {
   display: grid;
   grid-template-columns: repeat(16, 32px);
@@ -123,25 +109,18 @@ input, select {
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   user-select: none;
-  max-width: fit-content; /* Đảm bảo bảng chơi có độ rộng vừa phải */
+  max-width: fit-content;
+  margin: 0 auto; /* Giữ board vào giữa */
 }
 
-/* ====== Board centered + coordinates ====== */
+/* ===== Board + Coordinates wrapper ===== */
 .board-area {
   display: grid;
   grid-template-rows: auto auto;
   gap: 6px;
-  justify-items: center;          /* căn giữa toàn bộ khối board */
+  justify-items: center;  /* căn giữa toàn khối */
   width: 100%;
 }
-
-.coord-row {
-  display: grid;
-  grid-template-columns: repeat(16, 32px);
-  gap: 6px;
-  padding-left: 10px;             /* khớp padding .board */
-}
-
 .coord-wrap {
   display: grid;
   grid-template-columns: auto auto;
@@ -149,182 +128,7 @@ input, select {
   align-items: start;
 }
 
-.coord-col {
-  display: grid;
-  grid-template-rows: repeat(16, 32px);
-  gap: 6px;
-  padding-top: 10px;              /* khớp padding .board */
-}
-
-.coord-cell {
-  width: 24px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted);
-  font-weight: 600; font-size: 12px;
-  user-select: none;
-}
-
-/* giữ nguyên .board như bạn có, chỉ thêm margin tự căn giữa khi container hẹp */
-.board { margin: 0 auto; }
-
-/* ====== Scoreboard (2 đội) ====== */
-.scoreboard {
-  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-}
-.team { padding: 6px 10px; border-radius: 10px; background: rgba(255,255,255,.06); }
-.team-white { border: 1px solid rgba(255,255,255,.18); }
-.team-black { border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); }
-.turn { padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.08); }
-
-
-.tile {
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  background: var(--tile);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.tile.open {
-  background: var(--tile-open);
-  cursor: default;
-}
-
-.tile.flag {
-  background: #332b00;
-  outline: 2px solid var(--tile-flag);
-}
-
-.tile.mine.defused {
-  background: #15381a;
-  outline: 2px solid var(--good);
-}
-
-.tile.mine.open.failed {
-  background: #3a0913;
-  outline: 2px solid var(--danger);
-}
-
-footer {
-  justify-content: center;
-  color: var(--muted);
-}
-#quiz-backdrop {
-  position: fixed !important;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6); /* Màu nền mờ */
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999 !important; /* Đảm bảo câu hỏi luôn ở trên cùng */
-  top: 0; left: 0; right: 0; bottom: 0;
-}
-
-#quiz-modal {
-  background: #0f152d;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  width: min(720px, 92vw);
-  padding: 18px;
-  z-index: 1001; /* Đảm bảo modal luôn ở trên backdrop */
-}
-
-#quiz-modal h3 {
-  margin-top: 0;
-}
-#quiz-backdrop .quiz-modal {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-#quiz-content {
-  white-space: pre-line;
-  max-height: none;        /* quan trọng: bỏ giới hạn để KHÔNG có thanh trượt */
-  overflow: visible;
-}
-
-#quiz-answers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-#quiz-explanation {
-  margin-top: 8px;
-  opacity: 0.9;
-  white-space: pre-line;   /* giữ xuống dòng nếu có */
-}
-
-.quiz-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-
-#quiz-close-btn {
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-#quiz-answers button {
-  text-align: left;
-}
-
-#quiz-timer {
-  font-variant-numeric: tabular-nums;
-}
-
-#quiz-backdrop .quiz-modal { position: relative; }
-
-.toolbar .badge { margin-right: 6px; }
-
-/* Ô điểm đội đang đến lượt */
-.scoreboard .team.active {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.30);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08) inset;
-}
-
-/* Không cần pill "Lượt: …" nữa */
-.scoreboard .turn { display: none; }
-
-/* trạng thái đúng/sai của đáp án */
-#quiz-answers button.correct {
-  background: #15381a;                 /* xanh đậm */
-  outline: 2px solid var(--good);       /* var(--good) đã có trong :root */
-}
-
-#quiz-answers button.wrong {
-  background: #3a0913;                  /* đỏ đậm */
-  outline: 2px solid var(--danger);     /* var(--danger) đã có trong :root */
-}
-
-#quiz-answers button:disabled {
-  opacity: 0.9;
-  cursor: default;
-}
-
-/* highlight hàng/cột khi hover một ô */
-.tile.hl {
-  box-shadow: 0 0 0 9999px rgba(255,255,255,0.06) inset;
-  outline: 1px solid rgba(255,255,255,0.18);
-}
-
-.coord-cell.hl {
-  background: rgba(255,255,255,0.10);
-  border-radius: 6px;
-}
-
-/* Hàng chữ A–P bên trên */
+/* Hàng chữ A–P bên trên: khớp hẳn kích thước/gap/padding với .board */
 .coord-row {
   display: grid;
   grid-template-columns: repeat(16, 32px);
@@ -354,3 +158,105 @@ footer {
   font-size: 12px;
   user-select: none;
 }
+
+/* ===== Scoreboard (5 nhóm) ===== */
+.scoreboard { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.team {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.18);
+}
+.scoreboard .team.active {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.30);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08) inset;
+}
+/* Nếu không dùng pill "Lượt" thì ẩn luôn */
+.scoreboard .turn { display: none; }
+
+.tile {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  background: var(--tile);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.tile.open { background: var(--tile-open); cursor: default; }
+.tile.flag { background: #332b00; outline: 2px solid var(--tile-flag); }
+.tile.mine.defused { background: #15381a; outline: 2px solid var(--good); }
+.tile.mine.open.failed { background: #3a0913; outline: 2px solid var(--danger); }
+
+/* Hover highlight hàng/cột */
+.tile.hl {
+  box-shadow: 0 0 0 9999px rgba(255,255,255,0.06) inset;
+  outline: 1px solid rgba(255,255,255,0.18);
+}
+.coord-cell.hl {
+  background: rgba(255,255,255,0.10);
+  border-radius: 6px;
+}
+
+footer { justify-content: center; color: var(--muted); }
+
+/* ===== Quiz Modal ===== */
+#quiz-backdrop {
+  position: fixed !important;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999 !important;
+}
+#quiz-modal {
+  background: #0f152d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  width: min(720px, 92vw);
+  padding: 18px;
+  z-index: 1001;
+}
+#quiz-modal h3 { margin-top: 0; }
+#quiz-backdrop .quiz-modal { display: flex; flex-direction: column; gap: 12px; }
+#quiz-backdrop .quiz-modal { position: relative; }
+
+#quiz-content {
+  white-space: pre-line;
+  max-height: none;
+  overflow: visible;
+}
+#quiz-answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+#quiz-answers button { text-align: left; }
+#quiz-answers button.correct {
+  background: #15381a;
+  outline: 2px solid var(--good);
+}
+#quiz-answers button.wrong {
+  background: #3a0913;
+  outline: 2px solid var(--danger);
+}
+#quiz-answers button:disabled { opacity: 0.9; cursor: default; }
+
+#quiz-explanation {
+  margin-top: 8px;
+  opacity: 0.9;
+  white-space: pre-line;
+}
+.quiz-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+#quiz-close-btn { padding: 8px 14px; border-radius: 10px; cursor: pointer; }
+
+#quiz-timer { font-variant-numeric: tabular-nums; }
+
+.toolbar .badge { margin-right: 6px; }
