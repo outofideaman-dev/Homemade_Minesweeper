@@ -323,3 +323,34 @@ footer {
   background: rgba(255,255,255,0.10);
   border-radius: 6px;
 }
+
+/* Hàng chữ A–P bên trên */
+.coord-row {
+  display: grid;
+  grid-template-columns: repeat(16, 32px);
+  gap: 6px;
+  /* bù đúng padding (10px) + border (1px) của .board */
+  padding-left: 11px;
+}
+
+/* Cột số 1–16 bên trái */
+.coord-col {
+  display: grid;
+  grid-template-rows: repeat(16, 32px);
+  gap: 6px;
+  /* bù đúng padding (10px) + border (1px) của .board */
+  padding-top: 11px;
+}
+
+/* Mỗi ô nhãn toạ độ phải bằng đúng kích thước ô trên board */
+.coord-cell {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* căn GIỮA chữ */
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  user-select: none;
+}
