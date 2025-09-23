@@ -5,6 +5,10 @@ const DEFUSE_SECONDS = 30;
 const GROUPS = 5;
 const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
+// Effect rates
+const EFFECT_ON_OPEN_RATE = 0.20;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
+const EFFECT_ON_DETONATION_RATE = 0.20;  // 20% khi bom NỔ (trả lời sai/hết giờ)
+
 // ----- DOM -----
 const boardEl      = document.getElementById("board");
 const mineTotalEl  = document.getElementById("mine-total");
@@ -56,6 +60,7 @@ let turn = 0;                       // 0..4 (Group 1 đi trước)
 let qIndex = 0;             // hỏi lần lượt
 let endGamePending = false; // chỉ alert khi bấm Thoát ở câu cuối
 
+// ===== Hover highlight helpers =====
 function getTileEl(x, y) {
   // renderBoard append theo thứ tự y (hàng) rồi x (cột)
   return boardEl.children[y * SIZE + x];
@@ -128,6 +133,54 @@ function endGame() {
   if (winners.length === 1) msg = `Hết câu hỏi!\n${winners[0]} thắng với ${max} điểm.`;
   else msg = `Hết câu hỏi!\nHòa giữa ${winners.join(", ")} với ${max} điểm.`;
   alert(msg);
+}
+
+// ===== Effect helpers (20% on open bomb / 20% on detonation) =====
+function pickOtherTeamIndex(cur) {
+  // chọn 1 nhóm ngẫu nhiên khác với nhóm hiện tại cur (0..GROUPS-1)
+  const r = randint(GROUPS - 1);
+  return r >= cur ? r + 1 : r;
+}
+
+function applyEffectOpenMine() {
+  if (Math.random() >= EFFECT_ON_OPEN_RATE) return;  // 80% không có gì
+
+  const eff = randint(3) + 1; // 1..3
+  if (eff === 1) {
+    // Trừ 1 điểm của 1 nhóm khác (không âm)
+    alert("Bạn nhanh tay quẳng bom đi trước khi kích nổ");
+    const other = pickOtherTeamIndex(turn);
+    scores[other] = Math.max(0, scores[other] - 1);
+  } else if (eff === 2) {
+    // +2 điểm cho nhóm hiện tại
+    alert("1 mũi tên trúng 2 đích");
+    scores[turn] += 2;
+  } else if (eff === 3) {
+    // Đổi điểm với một nhóm khác
+    alert("Bạn đi lạc");
+    const other = pickOtherTeamIndex(turn);
+    const tmp = scores[turn]; scores[turn] = scores[other]; scores[other] = tmp;
+  }
+  updateTurnUI();
+}
+
+function applyEffectOnDetonation() {
+  if (Math.random() >= EFFECT_ON_DETONATION_RATE) return; // 80% không có gì
+
+  const eff = randint(3) + 1; // 1..3
+  if (eff === 1) {
+    alert("Bạn nhanh tay quẳng bom đi trước khi kích nổ");
+    const other = pickOtherTeamIndex(turn);
+    scores[other] = Math.max(0, scores[other] - 1);
+  } else if (eff === 2) {
+    alert("1 mũi tên trúng 2 đích");
+    scores[turn] += 2;
+  } else if (eff === 3) {
+    alert("Bạn đi lạc");
+    const other = pickOtherTeamIndex(turn);
+    const tmp = scores[turn]; scores[turn] = scores[other]; scores[other] = tmp;
+  }
+  updateTurnUI();
 }
 
 // ----- Questions -----
@@ -253,13 +306,13 @@ function renderBoard() {
     tile.addEventListener("click", onTileClick);
     tile.addEventListener("contextmenu", (e) => { e.preventDefault(); toggleFlag(tile); });
     tile.addEventListener("mouseenter", () => {
-  // có thể cho phép hover dù đang inQuiz (chỉ là hiệu ứng),
-  // nếu muốn tắt trong quiz thì if (!inQuiz) highlightCross(x, y);
-  highlightCross(x, y);
-});
-tile.addEventListener("mouseleave", () => {
-  clearHighlight();
-});
+      // Cho phép hover cả khi đang quiz nếu muốn
+      highlightCross(x, y);
+    });
+    tile.addEventListener("mouseleave", () => {
+      clearHighlight();
+    });
+
     boardEl.appendChild(tile);
   }
 }
@@ -301,8 +354,12 @@ function openCell(x, y) {
   // Không làm gì -> không kết thúc lượt
   if (cell.opened || cell.flagged) return "noop";
 
-  // Mìn chưa gỡ -> bật quiz, chưa kết thúc lượt bây giờ
+  // Mìn chưa gỡ -> bật quiz; nhưng trước đó thử "effect khi vừa mở bom"
   if (cell.mine && !cell.defused) {
+    inQuiz = true;
+    pendingCell = { x, y };
+    applyEffectOpenMine(); // 20% effect ngay khi mở ô bom
+    // Tiếp tục startQuiz như bình thường
     startQuiz(x, y);
     return "quiz";
   }
@@ -354,8 +411,10 @@ function startQuiz(x, y) {
   if (!questions.length) { alert("Chưa có bộ câu hỏi. Hãy tải file .txt hoặc dùng mặc định."); return; }
   if (qIndex >= questions.length) { endGame(); return; } // phòng trường hợp click sau khi hết câu
 
-  inQuiz = true;
-  pendingCell = { x, y };
+  // inQuiz & pendingCell đã set trong openCell trước khi gọi tới đây (để effect mở bom chạy trước).
+  // Nhưng nếu gọi trực tiếp (trường hợp khác), đảm bảo set:
+  if (!inQuiz) inQuiz = true;
+  if (!pendingCell) pendingCell = { x, y };
 
   const q = questions[qIndex]; // tuần tự
   const letters = ["A","B","C","D"];
@@ -463,7 +522,10 @@ function finishQuiz(success, explanation, keepOpen = true) {
 
     checkBoardCleared();
   } else {
-    // Sai/hết giờ: không cộng điểm, tạo bàn mới & CHUYỂN LƯỢT
+    // Bom nổ → có 20% kích hoạt effect cho lượt hiện tại
+    applyEffectOnDetonation();
+
+    // Sau đó vẫn tạo bàn mới & chuyển lượt như trước
     setTimeout(() => { newBoard(); }, 150);
     switchTeam();
   }
@@ -521,5 +583,3 @@ async function startGame() {
 
   newBoard();
 }
-
-
