@@ -1,34 +1,32 @@
-// Minesweeper-like Web Game — Two teams (White/Black), no global timer, no leaderboard
+// Minesweeper-like Web Game — 5 Groups, no global timer, no leaderboard
 const SIZE = 16;
 const MINE_COUNT = 40;
 const DEFUSE_SECONDS = 30;
+const GROUPS = 5;
+const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
 // ----- DOM -----
-const boardEl = document.getElementById("board");
-const mineTotalEl = document.getElementById("mine-total");
-const teamWhiteBox = document.querySelector('.team-white');
-const teamBlackBox = document.querySelector('.team-black');
+const boardEl      = document.getElementById("board");
+const mineTotalEl  = document.getElementById("mine-total");
 
-
-// Scoreboard 2 đội
-const scoreWhiteEl = document.getElementById("score-white");
-const scoreBlackEl = document.getElementById("score-black");
-const turnTeamEl   = document.getElementById("turn-team");
+// Scoreboard (5 ô)
+const teamBoxes    = [...document.querySelectorAll('.scoreboard .team')];
+const scoreEls     = [...document.querySelectorAll('[data-score]')];
 
 // Tọa độ
 const coordTopEl   = document.getElementById("coord-top");
 const coordLeftEl  = document.getElementById("coord-left");
 
 // Counters
-const defusedEl = document.getElementById("defused-count");
-const mineCountEl = document.getElementById("mine-count");
+const defusedEl    = document.getElementById("defused-count");
+const mineCountEl  = document.getElementById("mine-count");
 
 // Controls
-const btnStart = document.getElementById("btn-start");
-const btnNewBoard = document.getElementById("btn-new-board");
-const modeOpenBtn = document.getElementById("mode-open");
-const modeFlagBtn = document.getElementById("mode-flag");
-const modeUnflagBtn = document.getElementById("mode-unflag");
+const btnStart     = document.getElementById("btn-start");
+const btnNewBoard  = document.getElementById("btn-new-board");
+const modeOpenBtn  = document.getElementById("mode-open");
+const modeFlagBtn  = document.getElementById("mode-flag");
+const modeUnflagBtn= document.getElementById("mode-unflag");
 
 // Questions / Quiz
 const fileQuestions  = document.getElementById("file-questions");
@@ -39,15 +37,6 @@ const quizAnswers    = document.getElementById("quiz-answers");
 const quizExplainEl  = document.getElementById("quiz-explanation");
 const quizTimerEl    = document.getElementById("quiz-timer");
 const quizCloseBtn   = document.getElementById("quiz-close-btn");
-quizCloseBtn.onclick = () => {
-  quizBackdrop.style.display = "none";
-  inQuiz = false;
-  if (endGamePending) {
-    endGamePending = false;
-    endGame();                // CHỈ lúc này mới công bố đội thắng
-  }
-};
-
 
 // ----- State -----
 let mode = "open";
@@ -55,19 +44,17 @@ let running = false;
 
 let board = null;
 let defusedCount = 0;
-let endGamePending = false; // bật khi vừa xử lý xong câu hỏi cuối
-
 
 let questions = [];
 let inQuiz = false;
 let quizTimer = null;
 let pendingCell = null;
 
-let team = "white";       // 'white' | 'black' ; Trắng đi trước
-let scoreWhite = 0;
-let scoreBlack = 0;
-let qIndex = 0; // hỏi lần lượt: 0,1,2,...
+let scores = Array(GROUPS).fill(0); // điểm từng nhóm
+let turn = 0;                       // 0..4 (Group 1 đi trước)
 
+let qIndex = 0;             // hỏi lần lượt
+let endGamePending = false; // chỉ alert khi bấm Thoát ở câu cuối
 
 // ----- Helpers -----
 function randint(n) { return Math.floor(Math.random() * n); }
@@ -82,19 +69,16 @@ function neighbors(x, y) {
 }
 
 function updateTurnUI() {
-  // Cập nhật điểm
-  scoreWhiteEl.textContent = String(scoreWhite);
-  scoreBlackEl.textContent = String(scoreBlack);
-
-  // (Giữ lại nếu bạn chưa ẩn badge "Lượt")
-  turnTeamEl.textContent = (team === "white" ? "Trắng" : "Đen");
-
-  // Tô xám ô của đội đang đến lượt
-  teamWhiteBox.classList.toggle('active', team === 'white');
-  teamBlackBox.classList.toggle('active', team === 'black');
+  for (let i = 0; i < GROUPS; i++) {
+    if (scoreEls[i]) scoreEls[i].textContent = String(scores[i]);
+    if (teamBoxes[i]) teamBoxes[i].classList.toggle('active', i === turn);
+  }
 }
 
-function switchTeam() { team = (team === "white" ? "black" : "white"); updateTurnUI(); }
+function switchTeam() {
+  turn = (turn + 1) % GROUPS;  // 1→2→3→4→5→1...
+  updateTurnUI();
+}
 
 function renderCoords() {
   const letters = Array.from({length: SIZE}, (_,i)=> String.fromCharCode(65+i)); // A..P
@@ -107,18 +91,18 @@ function endGame() {
   inQuiz = false;
   quizBackdrop.style.display = "none";
 
-  let msg;
-  if (scoreWhite === scoreBlack) msg = `Hết câu hỏi!\nHòa ${scoreWhite} – ${scoreBlack}.`;
-  else if (scoreWhite > scoreBlack) msg = `Hết câu hỏi!\nĐội Trắng thắng ${scoreWhite} – ${scoreBlack}.`;
-  else msg = `Hết câu hỏi!\nĐội Đen thắng ${scoreBlack} – ${scoreWhite}.`;
+  const max = Math.max(...scores);
+  const winners = scores.map((s, i) => s === max ? groupNames[i] : null).filter(Boolean);
 
+  let msg;
+  if (winners.length === 1) msg = `Hết câu hỏi!\n${winners[0]} thắng với ${max} điểm.`;
+  else msg = `Hết câu hỏi!\nHòa giữa ${winners.join(", ")} với ${max} điểm.`;
   alert(msg);
 }
 
-
 // ----- Questions -----
 async function loadDefaultQuestions() {
-  const res = await fetch("./assets/questions.txt");
+  const res = await fetch(`./assets/questions.txt`);
   if (!res.ok) throw new Error("Không tải được ./assets/questions.txt");
   const text = await res.text();
   questions = parseQuestions(text);
@@ -287,26 +271,33 @@ function checkBoardCleared() {
   if (defusedCount >= MINE_COUNT) {
     alert("Chúc mừng! Đã gỡ hết mìn. Tạo bàn mới.");
     newBoard();
-    // Không đổi lượt ở đây (đã đổi lượt khi defuse xong quả mìn).
   }
 }
 
 // ----- Quiz (Defuse) -----
+quizCloseBtn.onclick = () => {
+  quizBackdrop.style.display = "none";
+  inQuiz = false;
+  if (endGamePending) {
+    endGamePending = false;
+    endGame(); // chỉ công bố khi bấm Thoát ở câu cuối
+  }
+};
+
 function startQuiz(x, y) {
   if (!questions.length) { alert("Chưa có bộ câu hỏi. Hãy tải file .txt hoặc dùng mặc định."); return; }
-  // Nếu đã hết câu hỏi mà vẫn click vào mìn, kết thúc game luôn
-  if (qIndex >= questions.length) { endGame(); return; }
+  if (qIndex >= questions.length) { endGame(); return; } // phòng trường hợp click sau khi hết câu
 
   inQuiz = true;
   pendingCell = { x, y };
 
-  const q = questions[qIndex];          // lấy theo thứ tự
+  const q = questions[qIndex]; // tuần tự
   const letters = ["A","B","C","D"];
   const optsArr = letters
     .map(L => ({ label: L, text: (q.options?.[L] || "").trim(), correct: (L === q.answer) }))
     .filter(o => o.text.length > 0);
 
-  // shuffle vị trí lựa chọn (giữ nguyên nếu bạn muốn)
+  // shuffle vị trí lựa chọn (tuỳ bạn có thể bỏ)
   for (let i = optsArr.length - 1; i > 0; i--) {
     const j = randint(i + 1);
     [optsArr[i], optsArr[j]] = [optsArr[j], optsArr[i]];
@@ -333,15 +324,13 @@ function startQuiz(x, y) {
       allBtns.forEach(b => b.disabled = true);
 
       if (btn.dataset.correct === "1") {
-        // Chọn đúng -> tô xanh nút đã chọn
-        btn.classList.add("correct");
+        btn.classList.add("correct");           // đúng: xanh
         resultKnown = true;
         finishQuiz(true, q.explanation, /*keepOpen*/ true);
       } else {
-        // Chọn sai -> tô đỏ nút chọn, tô xanh đáp án đúng
-        btn.classList.add("wrong");
+        btn.classList.add("wrong");             // sai: đỏ
         const correctBtn = allBtns.find(b => b.dataset.correct === "1");
-        if (correctBtn) correctBtn.classList.add("correct");
+        if (correctBtn) correctBtn.classList.add("correct"); // bôi xanh đáp án đúng
         resultKnown = true;
         finishQuiz(false, q.explanation, /*keepOpen*/ true);
       }
@@ -366,7 +355,7 @@ function startQuiz(x, y) {
     if (left <= 0) {
       clearInterval(quizTimer);
       if (!resultKnown) {
-        // Hết giờ: khóa nút & tô xanh đáp án đúng để người chơi thấy
+        // Hết giờ: khóa nút & tô xanh đáp án đúng
         const allBtns = [...quizAnswers.children];
         allBtns.forEach(b => b.disabled = true);
         const correctBtn = allBtns.find(b => b.dataset.correct === "1");
@@ -379,17 +368,15 @@ function startQuiz(x, y) {
   }, 200);
 }
 
-
-
 function finishQuiz(success, explanation, keepOpen = true) {
   if (quizTimer) clearInterval(quizTimer);
 
-  // LUÔN hiển thị giải thích (bên dưới lựa chọn)
+  // luôn hiển thị giải thích
   quizExplainEl.textContent = (explanation && explanation.trim())
     ? explanation.trim()
     : "Không có giải thích.";
 
-  // cập nhật ô/bàn + điểm/luật đội
+  // cập nhật ô/bàn + điểm/luật nhóm
   const { x, y } = pendingCell || {};
   pendingCell = null;
   if (x == null || y == null) return;
@@ -403,31 +390,32 @@ function finishQuiz(success, explanation, keepOpen = true) {
     defusedEl.textContent = String(defusedCount);
     mineCountEl.textContent = String(MINE_COUNT - defusedCount);
 
-    if (team === "white") scoreWhite += 1; else scoreBlack += 1;
+    // +1 cho nhóm đang đi rồi CHUYỂN LƯỢT
+    scores[turn] += 1;
     updateTurnUI();
     switchTeam();
 
     checkBoardCleared();
   } else {
+    // Sai/hết giờ: không cộng điểm, tạo bàn mới & CHUYỂN LƯỢT
     setTimeout(() => { newBoard(); }, 150);
     switchTeam();
   }
 
   renderBoard();
 
-  // ĐÃ xử lý xong câu hiện tại → chuyển sang câu tiếp theo
+  // ĐÃ xử lý xong câu hiện tại → sang câu tiếp theo
   qIndex += 1;
 
-  // Nếu đã dùng hết câu hỏi → kết thúc game
+  // Hết câu → không alert ngay; chờ bấm Thoát
   if (qIndex >= questions.length) {
     endGamePending = true;
     return;
   }
 
-  // Giữ popup mở để xem giải thích; người chơi bấm Thoát để đóng
+  // (Tuỳ chọn) tự đóng nếu muốn
   if (!keepOpen) { quizBackdrop.style.display = "none"; inQuiz = false; }
 }
-
 
 // ----- Controls -----
 function setMode(newMode) {
@@ -446,22 +434,23 @@ btnStart.addEventListener("click", startGame);
 
 let questionsLoaded = false;
 async function startGame() {
-  
   if (running) return;
+
   if (!questionsLoaded) {
     try { await loadDefaultQuestions(); questionsLoaded = true; }
-    catch (e) { console.error(e); alert("Không tải được bộ câu hỏi mặc định. Hãy chọn file .txt."); }
+    catch (e) { console.error(e); alert("Không tải được bộ câu hỏi mặc định. Hãy chọn file .txt."); return; }
   }
+
   running = true;
 
-  // Reset 2 đội & counters
-  endGamePending = false;
-  team = "white";
-  scoreWhite = 0; scoreBlack = 0;
+  // Reset nhóm & counters
+  scores = Array(GROUPS).fill(0);
+  turn = 0;                 // Group 1 đi trước
   defusedCount = 0;
-  qIndex = 0;                 // <-- hỏi từ câu đầu tiên
-  mineTotalEl.textContent = String(MINE_COUNT);
+  qIndex = 0;
+  endGamePending = false;
 
+  mineTotalEl.textContent = String(MINE_COUNT);
   updateTurnUI();
 
   newBoard();
