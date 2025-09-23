@@ -230,10 +230,24 @@ function onTileClick(e) {
   if (!running || inQuiz) return;
   const x = parseInt(e.currentTarget.dataset.x, 10);
   const y = parseInt(e.currentTarget.dataset.y, 10);
-  if (mode === "open") openCell(x, y);
-  else if (mode === "flag") setFlag(x, y, true);
-  else if (mode === "unflag") setFlag(x, y, false);
-  renderBoard();
+
+  if (mode === "open") {
+    const res = openCell(x, y);
+    renderBoard();
+
+    // Mở ô thường (hoặc mìn đã gỡ) -> kết thúc lượt ngay
+    if (res === "opened") {
+      switchTeam();
+    }
+    // res === "quiz": chưa kết thúc ở đây; finishQuiz() sẽ tự switchTeam()
+    // res === "noop": không làm gì, không kết thúc lượt
+  } else if (mode === "flag") {
+    setFlag(x, y, true);
+    renderBoard();
+  } else if (mode === "unflag") {
+    setFlag(x, y, false);
+    renderBoard();
+  }
 }
 
 function toggleFlag(tileEl) {
@@ -245,9 +259,23 @@ function setFlag(x, y, val) { const cell = board[y][x]; if (cell.opened) return;
 
 function openCell(x, y) {
   const cell = board[y][x];
-  if (cell.opened || cell.flagged) return;
-  if (cell.mine) { if (cell.defused) { cell.opened = true; return; } startQuiz(x, y); return; }
-  floodOpen(x, y);
+
+  // Không làm gì -> không kết thúc lượt
+  if (cell.opened || cell.flagged) return "noop";
+
+  // Mìn chưa gỡ -> bật quiz, chưa kết thúc lượt bây giờ
+  if (cell.mine && !cell.defused) {
+    startQuiz(x, y);
+    return "quiz";
+  }
+
+  // Mìn đã gỡ hoặc ô thường -> mở (có thể flood), sau đó kết thúc lượt
+  if (cell.mine && cell.defused) {
+    cell.opened = true;
+  } else {
+    floodOpen(x, y);
+  }
+  return "opened";
 }
 
 function floodOpen(x, y) {
@@ -455,3 +483,4 @@ async function startGame() {
 
   newBoard();
 }
+
