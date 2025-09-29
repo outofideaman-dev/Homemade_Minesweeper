@@ -6,8 +6,8 @@ const GROUPS = 5;
 const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
 // Effect rates
-const EFFECT_ON_OPEN_RATE = 0.5;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
-const EFFECT_ON_SUCCESS_RATE = 0.5; // 20% sau khi gỡ mìn thành công
+const EFFECT_ON_OPEN_RATE = 0.3;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
+const EFFECT_ON_SUCCESS_RATE = 0.3; // 20% sau khi gỡ mìn thành công
 
 
 // ----- DOM -----
@@ -112,14 +112,14 @@ function applyEffectOpenMineWithMsg() {
     scores[turn] += 2;
     const after = scores[turn];
     updateTurnUI();
-    return `1 mũi tên trúng 2 đích\n- ${groupNames[turn]} +2 điểm (${before} → ${after})`;
+    return `Hiệu suất tối ưu\n- ${groupNames[turn]} +2 điểm (${before} → ${after})`;
   } else {
     const other = pickOtherTeamIndex(turn);
     const aName = groupNames[turn], bName = groupNames[other];
     const aBefore = scores[turn], bBefore = scores[other];
     const tmp = scores[turn]; scores[turn] = scores[other]; scores[other] = tmp;
     updateTurnUI();
-    return `Bạn đi lạc\n- Đổi điểm giữa ${aName} và ${bName}\n  (trước: ${aName}=${aBefore}, ${bName}=${bBefore})`;
+    return `Đổi điểm giữa ${aName} và ${bName}\n  (trước: ${aName}=${aBefore}, ${bName}=${bBefore})`;
   }
 }
 
@@ -148,7 +148,7 @@ function runSuccessEffectAndGetMsg() {
     scores[turn] = after;
     updateTurnUI();
     const sign = delta > 0 ? `+${delta}` : `${delta}`;
-    return `Được ăn cả, ngã về không\n- ${groupNames[turn]} nhận ${sign} điểm (${before} → ${after})`;
+    return `Được ăn cả, ngã về không (Đội chơi có cơ hội nhận được số điển từ -2 đến 3)\n- ${groupNames[turn]} nhận ${sign} điểm (${before} → ${after})`;
   }
 }
 
