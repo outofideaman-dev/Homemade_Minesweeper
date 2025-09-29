@@ -126,7 +126,7 @@ function spinWheel({ labels, title: modalTitle, durationMs = 5000 }) {
 
 // Vòng quay 5 team
 function spinTeamWheel(purposeText) {
-  const labels = groupNames.map((n, i) => n.replace("Group ", "T") + (i + 1));
+  const labels = groupNames.map(n => n.replace("Group ", "T")); // "T1", "T2", ...
   return spinWheel({ labels, title: purposeText || "Chọn đội", durationMs: 5000 })
     .then(idx => idx); // 0..4
 }
@@ -773,3 +773,4 @@ async function startGame() {
 
   newBoard();
 }
+
