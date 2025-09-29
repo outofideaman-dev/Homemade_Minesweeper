@@ -6,119 +6,8 @@ const GROUPS = 5;
 const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
 // Effect rates
-const EFFECT_ON_OPEN_RATE = 0.20;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
-const EFFECT_ON_SUCCESS_RATE = 0.20; // 20% sau khi gỡ mìn thành công
-
-// ----- Wheel DOM & state -----
-let inSpin = false; // chặn thao tác khi đang quay
-let __wheel;        // cache các phần tử wheel
-
-function getWheelEls() {
-  if (__wheel) return __wheel;
-  const backdrop = document.getElementById("wheel-backdrop");
-  const title    = document.getElementById("wheel-title");
-  const canvas   = document.getElementById("wheel-canvas");
-  const label    = document.getElementById("wheel-label");
-  const ctx      = canvas ? canvas.getContext("2d") : null;
-  __wheel = { backdrop, title, canvas, label, ctx };
-  return __wheel;
-}
-
-const TWO_PI = Math.PI * 2;
-
-function drawWheel(ctx, labels, rotation = 0) {
-  if (!ctx) return;
-  const { width, height } = ctx.canvas;
-  const r = Math.min(width, height) * 0.5 - 4;
-  ctx.clearRect(0, 0, width, height);
-  ctx.save();
-  ctx.translate(width/2, height/2);
-  ctx.rotate(rotation);
-
-  const n = labels.length;
-  const seg = TWO_PI / n;
-
-  for (let i = 0; i < n; i++) {
-    const a0 = i * seg, a1 = (i + 1) * seg;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, r, a0, a1);
-    ctx.closePath();
-    ctx.fillStyle = `hsl(${(i*360/n)|0} 85% 45%)`;
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(0,0,0,.35)";
-    ctx.stroke();
-  }
-
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 16px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  for (let i = 0; i < n; i++) {
-    const a = (i + 0.5) * seg;
-    const tx = Math.cos(a) * (r * 0.65);
-    const ty = Math.sin(a) * (r * 0.65);
-    ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate(a);
-    ctx.fillText(String(labels[i]), 0, 0);
-    ctx.restore();
-  }
-  ctx.restore();
-}
-
-function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-/** Quay wheel trong `durationMs` và trả về index trúng. */
-function spinWheel({ labels, title: modalTitle, durationMs = 5000 }) {
-  return new Promise((resolve) => {
-    const { backdrop, title, label, ctx } = getWheelEls();
-    if (!backdrop || !ctx) {
-      console.warn("[wheel] DOM chưa sẵn sàng");
-      return resolve(0);
-    }
-
-    inSpin = true;
-    title.textContent = modalTitle || "Vòng quay";
-    label.textContent = "";
-    backdrop.style.display = "flex";
-
-    const n = labels.length;
-    const seg = TWO_PI / n;
-
-    const targetIndex = Math.floor(Math.random() * n);
-    const targetAngle = targetIndex * seg + seg / 2;
-    let align = (1.5 * Math.PI - targetAngle);
-    align = (align % TWO_PI + TWO_PI) % TWO_PI;
-
-    const extraTurns = 4 + Math.random() * 2;
-    const finalAngle = align + TWO_PI * extraTurns;
-
-    const t0 = performance.now();
-    let rafId;
-    const tick = (tNow) => {
-      const t = Math.min(1, (tNow - t0) / durationMs);
-      const angle = finalAngle * easeOutCubic(t);
-      drawWheel(ctx, labels, angle);
-      if (t < 1) {
-        rafId = requestAnimationFrame(tick);
-      } else {
-        cancelAnimationFrame(rafId);
-        setTimeout(() => {
-          inSpin = false;
-          backdrop.style.display = "none";
-          resolve(targetIndex);
-        }, 250);
-      }
-    };
-
-    drawWheel(ctx, labels, 0);
-    requestAnimationFrame(tick);
-  });
-}
-
-
+const EFFECT_ON_OPEN_RATE = 1;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
+const EFFECT_ON_SUCCESS_RATE = 1; // 20% sau khi gỡ mìn thành công
 
 
 // ----- DOM -----
@@ -167,6 +56,7 @@ let quizTimer = null;
 let pendingCell = null;
 let suppressSuccessEffectThisTurn = false;
 
+
 let scores = Array(GROUPS).fill(0); // điểm từng nhóm
 let turn = 0;                       // 0..4 (Group 1 đi trước)
 
@@ -206,165 +96,36 @@ function highlightCross(x, y) {
 
 // ----- Helpers -----
 
-
-function drawWheel(labels, rotation = 0) {
-  const ctx = wctx;
-  const { width, height } = wheelCanvas;
-  const r = Math.min(width, height) * 0.5 - 4; // padding nhỏ
-  ctx.clearRect(0,0,width,height);
-  ctx.save();
-  ctx.translate(width/2, height/2);
-  ctx.rotate(rotation);
-
-  const n = labels.length;
-  const seg = TWO_PI / n;
-
-  // các miếng
-  for (let i=0;i<n;i++){
-    const a0 = i*seg, a1 = (i+1)*seg;
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.arc(0,0,r,a0,a1);
-    ctx.closePath();
-    ctx.fillStyle = `hsl(${(i*360/n)|0} 85% 45%)`;
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(0,0,0,.35)";
-    ctx.stroke();
-  }
-
-  // nhãn
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 16px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  for (let i=0;i<n;i++){
-    const a = (i+0.5)*seg;
-    const tx = Math.cos(a) * (r*0.65);
-    const ty = Math.sin(a) * (r*0.65);
-    ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate(a);
-    ctx.fillText(String(labels[i]), 0, 0);
-    ctx.restore();
-  }
-
-  ctx.restore();
-}
-
-function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-
-/**
- * Quay wheel trong `durationMs` và trả về index trúng.
- * Pointer cố định ở đỉnh (hướng lên), wheel xoay.
- */
-function spinWheel({ labels, title, durationMs = 5000 }) {
-  return new Promise((resolve) => {
-    inSpin = true;
-    wheelTitle.textContent = title || "Vòng quay";
-    wheelLabel.textContent = "";
-    wheelBackdrop.style.display = "flex";
-
-    const n = labels.length;
-    const seg = TWO_PI / n;
-
-    // chọn mục tiêu ngẫu nhiên
-    const targetIndex = Math.floor(Math.random() * n);
-
-    // căn sao cho tâm segment target nằm ở đỉnh (góc -90°, tức 3π/2)
-    const targetAngle = targetIndex * seg + seg/2;
-    let align = (1.5*Math.PI - targetAngle); // 3π/2 - targetAngle
-    // normalize về [0, 2π)
-    align = (align % TWO_PI + TWO_PI) % TWO_PI;
-
-    const extraTurns = 4 + Math.random()*2; // quay 4→6 vòng
-    const finalAngle = align + TWO_PI * extraTurns;
-
-    const t0 = performance.now();
-    let raf;
-    const tick = (tNow) => {
-      const t = Math.min(1, (tNow - t0)/durationMs);
-      const val = easeOutCubic(t);
-      const angle = finalAngle * val;
-      drawWheel(labels, angle);
-      if (t < 1) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        cancelAnimationFrame(raf);
-        setTimeout(() => { // nhỏ để người xem kịp nhìn
-          inSpin = false;
-          wheelBackdrop.style.display = "none";
-          resolve(targetIndex);
-        }, 250);
-      }
-    };
-    drawWheel(labels, 0);
-    requestAnimationFrame(tick);
-  });
-}
-
-// Vòng quay 5 team
-function spinTeamWheel(purposeText){
-  const labels = groupNames.map((n,i)=> n.replace("Group ","T")+ (i+1));
-  return spinWheel({ labels, title: purposeText || "Chọn đội", durationMs: 5000 })
-    .then(idx => idx); // trả về index 0..4
-}
-
-// Vòng quay delta -2..+3
-function spinDeltaWheel(){
-  const labels = ["-2","-1","0","+1","+2","+3"];
-  return spinWheel({ labels, title: "Bốc điểm (-2 .. +3)", durationMs: 5000 })
-    .then(idx => parseInt(labels[idx], 10));
-}
-
-
-async function applyEffectOpenMineWithMsg() {
+function applyEffectOpenMineWithMsg() {
   if (Math.random() >= EFFECT_ON_OPEN_RATE) return "";
 
   const eff = randint(3) + 1;
-
   if (eff === 1) {
-    // 🔁 Quay để chọn đội bị trừ 1 điểm (gồm cả đội đang lượt)
-    const victim = await spinTeamWheel("Chọn đội bị trừ 1 điểm");
+    const victim = pickAnyTeamIndex();
     const before = scores[victim];
     scores[victim] = Math.max(0, scores[victim] - 1);
     const after = scores[victim];
     updateTurnUI();
     return `Gắp lửa bỏ tay người\n- Trừ 1 điểm của ${groupNames[victim]} (${before} → ${after})`;
-
   } else if (eff === 2) {
-    // +2 điểm cho đội đang lượt (không cần quay)
     const before = scores[turn];
     scores[turn] += 2;
     const after = scores[turn];
     updateTurnUI();
     return `1 mũi tên trúng 2 đích\n- ${groupNames[turn]} +2 điểm (${before} → ${after})`;
-
   } else {
-    // 🔁 Quay để chọn đội đổi điểm (khác đội hiện tại)
-    let other = await spinTeamWheel("Chọn đội để đổi điểm với đội hiện tại");
-    if (other === turn) {
-      // quay lại 1 lần để đảm bảo khác
-      other = await spinTeamWheel("Trúng đội hiện tại! Quay lại để chọn đội khác");
-      if (other === turn) {
-        // nếu vẫn trúng, thôi cho đổi với đội kế tiếp để không kẹt
-        other = (turn + 1) % GROUPS;
-      }
-    }
+    const other = pickOtherTeamIndex(turn);
     const aName = groupNames[turn], bName = groupNames[other];
     const aBefore = scores[turn], bBefore = scores[other];
-
     const tmp = scores[turn]; scores[turn] = scores[other]; scores[other] = tmp;
     updateTurnUI();
-
     return `Bạn đi lạc\n- Đổi điểm giữa ${aName} và ${bName}\n  (trước: ${aName}=${aBefore}, ${bName}=${bBefore})`;
   }
 }
 
-
-async function runSuccessEffectAndGetMsg() {
+function runSuccessEffectAndGetMsg() {
   if (randint(2) === 0) {
-    // mở 3 ô an toàn (giữ nguyên)
+    // mở 3 ô an toàn (không cộng điểm)
     const safes = [];
     for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
       const c = board[y][x];
@@ -381,9 +142,8 @@ async function runSuccessEffectAndGetMsg() {
     renderBoard();
     return `Vén màn bí mật\n- Lộ ${n} ô an toàn: ${openedCoords.join(", ")}`;
   } else {
-    // 🔁 Vòng quay delta -2..+3
-    const delta = await spinDeltaWheel();
     const before = scores[turn];
+    const delta = randint(6) - 2; // -2..+3
     const after = Math.max(0, before + delta);
     scores[turn] = after;
     updateTurnUI();
@@ -391,7 +151,6 @@ async function runSuccessEffectAndGetMsg() {
     return `Được ăn cả, ngã về không\n- ${groupNames[turn]} nhận ${sign} điểm (${before} → ${after})`;
   }
 }
-
 
 function randint(n) { return Math.floor(Math.random() * n); }
 function neighbors(x, y) {
@@ -681,13 +440,13 @@ function renderBoard() {
   }
 }
 
-async function onTileClick(e) {
-  if (!running || inQuiz || inSpin) return;
+function onTileClick(e) {
+  if (!running || inQuiz) return;
   const x = parseInt(e.currentTarget.dataset.x, 10);
   const y = parseInt(e.currentTarget.dataset.y, 10);
 
   if (mode === "open") {
-    const res = await openCell(x, y);
+    const res = openCell(x, y);
     renderBoard();
 
     // Mở ô thường (hoặc mìn đã gỡ) -> kết thúc lượt ngay
@@ -712,35 +471,43 @@ function toggleFlag(tileEl) {
 }
 function setFlag(x, y, val) { const cell = board[y][x]; if (cell.opened) return; cell.flagged = val; }
 
-async function openCell(x, y) {
+function openCell(x, y) {
   const cell = board[y][x];
+
+  // Không làm gì -> không kết thúc lượt
   if (cell.opened || cell.flagged) return "noop";
 
+  // Mìn chưa gỡ -> thử "effect khi vừa mở bom"
   if (cell.mine && !cell.defused) {
-    const msgOpen = await applyEffectOpenMineWithMsg();
+    // Thay vì gọi trực tiếp, để applyEffectOpenMine trả về message
+    const msgOpen = applyEffectOpenMineWithMsg(); // <-- hàm mới bên dưới
+
     if (msgOpen) {
       suppressSuccessEffectThisTurn = true;
-      // đánh dấu đã gỡ (KHÔNG cộng điểm)
+      // đánh dấu đã gỡ
       cell.defused = true;
       cell.opened = true;
       defusedCount += 1;
       defusedEl.textContent = String(defusedCount);
       mineCountEl.textContent = String(MINE_COUNT - defusedCount);
 
-      // ❌ KHÔNG chạy effect sau-quiz tại đây
-      alert(`Hiệu ứng khi mở bom:\n${msgOpen}`);
+      // chạy on-success và ghép message
+
+      alert(`Hiệu ứng khi mở bom:\n${msgOpen}${msgSuccess}`);
 
       checkBoardCleared();
       return "opened";
     }
 
-    // Không trúng effect mở bom → vào quiz
+    // không trúng effect → vào quiz
     inQuiz = true;
     pendingCell = { x, y };
     startQuiz(x, y);
     return "quiz";
   }
 
+
+  // Mìn đã gỡ hoặc ô thường -> mở (có thể flood), sau đó kết thúc lượt
   if (cell.mine && cell.defused) {
     cell.opened = true;
   } else {
@@ -748,7 +515,6 @@ async function openCell(x, y) {
   }
   return "opened";
 }
-
 
 
 
@@ -820,7 +586,7 @@ function startQuiz(x, y) {
     btn.textContent = `${String.fromCharCode(65 + idx)}. ${opt.text}`;
     btn.dataset.correct = opt.correct ? "1" : "0";
 
-    btn.addEventListener("click", async () => {
+    btn.addEventListener("click", () => {
       if (answered) return;
       answered = true;
 
@@ -851,7 +617,7 @@ function startQuiz(x, y) {
   quizTimerEl.textContent = left;
   if (quizTimer) clearInterval(quizTimer);
   const t0 = Date.now();
-  quizTimer = setInterval(async () => {
+  quizTimer = setInterval(() => {
     const elapsed = Math.floor((Date.now() - t0) / 1000);
     left = Math.max(0, DEFUSE_SECONDS - elapsed);
     quizTimerEl.textContent = left;
@@ -872,7 +638,7 @@ function startQuiz(x, y) {
   }, 200);
 }
 
-async function finishQuiz(success, explanation, keepOpen = true) {
+function finishQuiz(success, explanation, keepOpen = true) {
   if (quizTimer) clearInterval(quizTimer);
 
   // luôn hiển thị giải thích
@@ -902,7 +668,7 @@ async function finishQuiz(success, explanation, keepOpen = true) {
     // ✅ Áp hiệu ứng sau khi gỡ (dùng hàm trả về message để HIỂN THỊ TRONG POPUP)
     let msgSuccess = "";
     if (!suppressSuccessEffectThisTurn && Math.random() < EFFECT_ON_SUCCESS_RATE) {
-      const m = await runSuccessEffectAndGetMsg();
+      const m = runSuccessEffectAndGetMsg(); // thực thi hiệu ứng & trả về mô tả
       if (m) {
         // nối message vào phần giải thích để người chơi thấy ngay
         const extra = `\n\nHiệu ứng sau khi gỡ:\n${m}`;
