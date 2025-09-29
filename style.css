@@ -260,3 +260,29 @@ footer { justify-content: center; color: var(--muted); }
 #quiz-timer { font-variant-numeric: tabular-nums; }
 
 .toolbar .badge { margin-right: 6px; }
+
+
+/* Wheel overlay */
+#wheel-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.6);
+  display: none; align-items: center; justify-content: center;
+  z-index: 9990;
+}
+.wheel-modal{
+  background:#111; color:#fff; padding:16px 18px; border-radius:12px;
+  box-shadow:0 18px 60px rgba(0,0,0,.5); text-align:center;
+  max-width: 520px; width: calc(100% - 32px);
+}
+#wheel-title{ font:600 18px/1.2 system-ui, sans-serif; margin-bottom:10px; }
+.wheel-container{ position:relative; display:inline-block; }
+#wheel-canvas{ display:block; border-radius:50%; }
+.wheel-pointer{
+  position:absolute; left:50%; transform: translateX(-50%);
+  top:-14px; font-size:28px; line-height:1; text-shadow:0 2px 4px rgba(0,0,0,.6);
+}
+#wheel-label{ margin-top:10px; font: 14px/1.3 system-ui, sans-serif; opacity:.85; }
+/* Override: để wheel nổi cao hơn popup quiz */
+#wheel-backdrop {
+  z-index: 10050 !important;
+}

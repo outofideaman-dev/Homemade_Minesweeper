@@ -6,6 +6,7 @@
     <title>Minesweeper — 16x16</title>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
     <header>
       <div class="left"><strong>Minesweeper</strong></div>
@@ -78,6 +79,18 @@
 
     <footer>OwO</footer>
     <script type="module" src="app.js"></script>
+    <!-- Wheel Overlay -->
+  <div id="wheel-backdrop" style="display:none">
+    <div class="wheel-modal">
+      <div id="wheel-title">Vòng quay</div>
+      <div class="wheel-container">
+        <canvas id="wheel-canvas" width="420" height="420"></canvas>
+        <div class="wheel-pointer">▼</div>
+      </div>
+      <div id="wheel-label"></div>
+    </div>
+  </div>
+
   </body>
 </html>
 
