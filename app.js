@@ -555,8 +555,19 @@ quizCloseBtn.onclick = () => {
 };
 
 function startQuiz(x, y) {
-  if (!questions.length) { alert("Chưa có bộ câu hỏi. Hãy tải file .txt hoặc dùng mặc định."); return; }
-  if (qIndex >= questions.length) { endGame(); return; } // phòng trường hợp click sau khi hết câu
+  if (!questions.length) {
+    // reset lại các cờ để không kẹt ở trạng thái inQuiz
+    inQuiz = false;
+    pendingCell = null;
+    alert("Chưa có bộ câu hỏi. Hãy tải file .txt hoặc dùng mặc định.");
+    return;
+  }
+  if (qIndex >= questions.length) {
+    inQuiz = false;      // tránh kẹt
+    pendingCell = null;  // tránh rác
+    endGame();
+    return;
+  }
 
   // inQuiz & pendingCell đã set trong openCell trước khi gọi tới đây (để effect mở bom chạy trước).
   // Nhưng nếu gọi trực tiếp (trường hợp khác), đảm bảo set:
