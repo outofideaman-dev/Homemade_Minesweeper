@@ -6,8 +6,8 @@ const GROUPS = 5;
 const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
 // Effect rates
-const EFFECT_ON_OPEN_RATE = 1;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
-const EFFECT_ON_SUCCESS_RATE = 1; // 20% sau khi gỡ mìn thành công
+const EFFECT_ON_OPEN_RATE = 0.5;        // 20% khi VỪA mở ô bom (quiz sắp hiện)
+const EFFECT_ON_SUCCESS_RATE = 0.5; // 20% sau khi gỡ mìn thành công
 
 
 // ----- DOM -----
@@ -479,32 +479,34 @@ function openCell(x, y) {
 
   // Mìn chưa gỡ -> thử "effect khi vừa mở bom"
   if (cell.mine && !cell.defused) {
-    // Thay vì gọi trực tiếp, để applyEffectOpenMine trả về message
-    const msgOpen = applyEffectOpenMineWithMsg(); // <-- hàm mới bên dưới
+    // thử effect khi vừa mở bom
+    const msgOpen = applyEffectOpenMineWithMsg();
 
     if (msgOpen) {
+      // đã trúng effect mở bom => KHÔNG chạy effect sau-quiz ở lượt này
       suppressSuccessEffectThisTurn = true;
-      // đánh dấu đã gỡ
+
+      // đánh dấu đã gỡ & mở ô (KHÔNG cộng điểm ở đây)
       cell.defused = true;
       cell.opened = true;
       defusedCount += 1;
       defusedEl.textContent = String(defusedCount);
       mineCountEl.textContent = String(MINE_COUNT - defusedCount);
 
-      // chạy on-success và ghép message
-
-      alert(`Hiệu ứng khi mở bom:\n${msgOpen}${msgSuccess}`);
+      // chỉ hiện thông báo effect trước-quiz (không dính gì đến after-quiz)
+      alert(`Hiệu ứng khi mở bom:\n${msgOpen}`);
 
       checkBoardCleared();
       return "opened";
     }
 
-    // không trúng effect → vào quiz
+    // không trúng effect mở bom → vào quiz
     inQuiz = true;
     pendingCell = { x, y };
     startQuiz(x, y);
     return "quiz";
   }
+
 
 
   // Mìn đã gỡ hoặc ô thường -> mở (có thể flood), sau đó kết thúc lượt
