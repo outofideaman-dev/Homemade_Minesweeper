@@ -6,8 +6,8 @@ const GROUPS = 5;
 const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
 // Effect rates
-const EFFECT_ON_OPEN_RATE = 0.20;   // Xác suất hiệu ứng NGAY KHI mở phải bom (trước quiz)
-const EFFECT_ON_SUCCESS_RATE = 0.20; // Xác suất hiệu ứng SAU KHI gỡ thành công (sau quiz)
+const EFFECT_ON_OPEN_RATE = 0.30;   // Xác suất hiệu ứng NGAY KHI mở phải bom (trước quiz)
+const EFFECT_ON_SUCCESS_RATE = 0.30; // Xác suất hiệu ứng SAU KHI gỡ thành công (sau quiz)
 
 // ===== Wheel DOM & state =====
 let inSpin = false;                 // chặn thao tác khi đang quay
@@ -773,4 +773,5 @@ async function startGame() {
 
   newBoard();
 }
+
 
