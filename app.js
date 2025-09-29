@@ -142,27 +142,34 @@ function pickOtherTeamIndex(cur) {
   return r >= cur ? r + 1 : r;
 }
 
+function pickAnyTeamIndex() {
+  return randint(GROUPS); // 0..GROUPS-1, gồm cả nhóm hiện tại
+}
+
+
 function applyEffectOpenMine() {
-  if (Math.random() >= EFFECT_ON_OPEN_RATE) return;  // 80% không có gì
+  if (Math.random() >= EFFECT_ON_OPEN_RATE) return false;  // 80% không có gì
 
   const eff = randint(3) + 1; // 1..3
   if (eff === 1) {
-    // Trừ 1 điểm của 1 nhóm khác (không âm)
+    // Trừ 1 điểm của 1 nhóm NGẪU NHIÊN (CÓ THỂ trúng nhóm hiện tại)
     alert("Bạn nhanh tay quẳng bom đi trước khi kích nổ");
-    const other = pickOtherTeamIndex(turn);
-    scores[other] = Math.max(0, scores[other] - 1);
+    const victim = pickAnyTeamIndex(); // ✅ gồm cả nhóm đang lượt
+    scores[victim] = Math.max(0, scores[victim] - 1);
   } else if (eff === 2) {
     // +2 điểm cho nhóm hiện tại
     alert("1 mũi tên trúng 2 đích");
     scores[turn] += 2;
   } else if (eff === 3) {
-    // Đổi điểm với một nhóm khác
+    // Đổi điểm với một nhóm KHÁC
     alert("Bạn đi lạc");
     const other = pickOtherTeamIndex(turn);
     const tmp = scores[turn]; scores[turn] = scores[other]; scores[other] = tmp;
   }
   updateTurnUI();
+  return true;
 }
+
 
 function applyEffectOnDetonation() {
   if (Math.random() >= EFFECT_ON_DETONATION_RATE) return; // 80% không có gì
@@ -354,12 +361,31 @@ function openCell(x, y) {
   // Không làm gì -> không kết thúc lượt
   if (cell.opened || cell.flagged) return "noop";
 
-  // Mìn chưa gỡ -> bật quiz; nhưng trước đó thử "effect khi vừa mở bom"
+  // Mìn chưa gỡ -> thử "effect khi vừa mở bom"
   if (cell.mine && !cell.defused) {
+    const hadEffect = applyEffectOpenMine(); // RNG + áp effect nếu trúng
+
+    if (hadEffect) {
+      // ✅ Có effect: KHÔNG hỏi câu hỏi
+      // → tính ô này đã gỡ thành công (nhưng KHÔNG +1 điểm)
+      cell.defused = true;
+      cell.opened = true;
+
+      defusedCount += 1;
+      defusedEl.textContent = String(defusedCount);
+      mineCountEl.textContent = String(MINE_COUNT - defusedCount);
+
+      // KHÔNG cộng điểm ở đây nữa!
+      // scores[turn] += 1;  // ❌ bỏ
+
+      // UI điểm đã được cập nhật trong applyEffectOpenMine() (nếu effect có thay điểm)
+      checkBoardCleared();
+      return "opened"; // để onTileClick() switchTeam()
+    }
+
+    // ❌ Không trúng effect → mở quiz như cũ
     inQuiz = true;
     pendingCell = { x, y };
-    applyEffectOpenMine(); // 20% effect ngay khi mở ô bom
-    // Tiếp tục startQuiz như bình thường
     startQuiz(x, y);
     return "quiz";
   }
@@ -372,6 +398,8 @@ function openCell(x, y) {
   }
   return "opened";
 }
+
+
 
 function floodOpen(x, y) {
   const stack = [[x, y]];
