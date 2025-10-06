@@ -254,7 +254,13 @@ footer { justify-content: center; color: var(--muted); }
   opacity: 0.9;
   white-space: pre-line;
 }
-.quiz-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+.quiz-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* tách hai đầu */
+  gap: 8px;                         /* có khoảng cách nếu ở gần nhau */
+  margin-top: 8px;
+}
 #quiz-close-btn { padding: 8px 14px; border-radius: 10px; cursor: pointer; }
 
 #quiz-timer { font-variant-numeric: tabular-nums; }
@@ -288,5 +294,7 @@ footer { justify-content: center; color: var(--muted); }
 }
 
 #quiz-effect-btn {
-  position: relative; /* để theo layout của footer */
+  margin-right: auto;             
+  display: inline-flex;
+  align-items: center;
 }
