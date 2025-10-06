@@ -6,24 +6,173 @@ const GROUPS = 5;
 const groupNames = Array.from({ length: GROUPS }, (_, i) => `Group ${i + 1}`);
 
 // Effect rates
-const EFFECT_ON_OPEN_RATE = 0.30;   // Xác suất hiệu ứng NGAY KHI mở phải bom (trước quiz)
-const EFFECT_ON_SUCCESS_RATE = 0.30; // Xác suất hiệu ứng SAU KHI gỡ thành công (sau quiz)
+const EFFECT_ON_OPEN_RATE = 0.3;   // Xác suất hiệu ứng NGAY KHI mở phải bom (trước quiz)
+const EFFECT_ON_SUCCESS_RATE = 0.3; // Xác suất hiệu ứng SAU KHI gỡ thành công (sau quiz)
 
 // ===== Wheel DOM & state =====
 let inSpin = false;                 // chặn thao tác khi đang quay
 let suppressSuccessEffectThisTurn = false; // nếu effect "mở bom" xảy ra thì không chạy effect "sau-quiz"
+const quizEffectBtn = document.getElementById("quiz-effect-btn");
 
 let __wheel; // cache DOM phần wheel để không truy vấn lại mỗi lần
 function getWheelEls() {
-  if (__wheel) return __wheel;
+  if (__wheel && __wheel.backdrop && __wheel.canvas && __wheel.spinBtn) return __wheel;
   const backdrop = document.getElementById("wheel-backdrop");
   const title    = document.getElementById("wheel-title");
   const canvas   = document.getElementById("wheel-canvas");
   const label    = document.getElementById("wheel-label");
+  const spinBtn  = document.getElementById("wheel-spin-btn"); // NEW
   const ctx      = canvas ? canvas.getContext("2d") : null;
-  __wheel = { backdrop, title, canvas, label, ctx };
+  __wheel = { backdrop, title, canvas, label, spinBtn, ctx };
   return __wheel;
 }
+let pendingEffect = null;
+
+// Tạo pending effect cho CASE "mở mìn" (trước quiz). Trả về true/false có effect hay không.
+async function prepareEffectOnOpenMine() {
+  if (Math.random() >= EFFECT_ON_OPEN_RATE) return false;
+
+  const eff = randint(3) + 1;
+
+  if (eff === 1) {
+    // Chọn đội bị trừ 1 điểm → cần quay team
+    pendingEffect = {
+      type: "open:minus1",
+      desc: "Chọn đội bị trừ 1 điểm",
+      requiresSpin: true,
+      run: async () => {
+        // chạy sau khi đã quay
+        const victim = await spinTeamWheel("Chọn đội bị trừ 1 điểm"); // quay thật tại thời điểm SPIN
+        const before = scores[victim];
+        scores[victim] = Math.max(0, scores[victim] - 1);
+        updateTurnUI();
+        alert(`Gắp lửa bỏ tay người\n- Trừ 1 điểm của ${groupNames[victim]} (${before} → ${scores[victim]})`);
+      }
+    };
+  } else if (eff === 2) {
+    // +2 cho đội hiện tại → không cần quay, nhưng vẫn bắt bấm "Spin" để xác nhận áp dụng
+    pendingEffect = {
+      type: "open:+2current",
+      desc: "Tặng +2 điểm cho đội đang lượt",
+      requiresSpin: false,
+      run: async () => {
+        const before = scores[turn];
+        scores[turn] = before + 2;
+        updateTurnUI();
+        alert(`1 mũi tên trúng 2 đích\n- ${groupNames[turn]} +2 điểm (${before} → ${scores[turn]})`);
+      }
+    };
+  } else {
+    // Đổi điểm với đội khác → cần quay team (tránh tự động re-spin; nếu trúng chính mình thì lấy đội kế)
+    pendingEffect = {
+      type: "open:swap",
+      desc: "Chọn đội để đổi điểm với đội hiện tại",
+      requiresSpin: true,
+      run: async () => {
+        let other = await spinTeamWheel("Chọn đội để đổi điểm với đội hiện tại");
+        if (other === turn) other = (turn + 1) % GROUPS; // tránh no-op
+        const aName = groupNames[turn], bName = groupNames[other];
+        const aBefore = scores[turn], bBefore = scores[other];
+        [scores[turn], scores[other]] = [scores[other], scores[turn]];
+        updateTurnUI();
+        alert(`Bạn đi lạc\n- Đổi điểm giữa ${aName} và ${bName}\n  (trước: ${aName}=${aBefore}, ${bName}=${bBefore})`);
+      }
+    };
+  }
+
+  return true;
+}
+
+// Tạo pending effect cho CASE "sau khi gỡ thành công"
+async function makeSuccessPendingEffect() {
+  if (randint(2) === 0) {
+    // Mở 3 ô an toàn (không cộng điểm) — không cần quay nhưng vẫn vào flow "Spin" để người chơi tự áp dụng
+    return {
+      type: "success:reveal",
+      desc: "Vén màn bí mật — Lộ tối đa 3 ô an toàn",
+      requiresSpin: false,
+      run: async () => {
+        const safes = [];
+        for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) {
+          const c = board[y][x];
+          if (!c.opened && !c.flagged && !(c.mine && !c.defused)) safes.push([x, y]);
+        }
+        const openedCoords = [];
+        const n = Math.min(3, safes.length);
+        for (let i = 0; i < n; i++) {
+          const k = randint(safes.length);
+          const [x, y] = safes.splice(k, 1)[0];
+          floodOpen(x, y);
+          openedCoords.push(`${String.fromCharCode(65 + x)}${y + 1}`);
+        }
+        renderBoard();
+        alert(`Vén màn bí mật\n- Lộ ${n} ô an toàn: ${openedCoords.join(", ")}`);
+      }
+    };
+  } else {
+    // Δ điểm -2..+3 cho đội hiện tại → quay delta
+    return {
+      type: "success:delta",
+      desc: "Bốc điểm (-2 .. +3)",
+      requiresSpin: true,
+      run: async () => {
+        const delta = await spinDeltaWheel();
+        const before = scores[turn];
+        const after = Math.max(0, before + delta);
+        scores[turn] = after;
+        updateTurnUI();
+        const sign = delta > 0 ? `+${delta}` : `${delta}`;
+        alert(`Được ăn cả, ngã về không\n- ${groupNames[turn]} nhận ${sign} điểm (${before} → ${after})`);
+      }
+    };
+  }
+}
+quizEffectBtn?.addEventListener("click", () => {
+  if (!pendingEffect) return;
+  const { backdrop, title, label, spinBtn, ctx } = getWheelEls();
+  if (!backdrop) return;
+
+  // Set mô tả/tiêu đề
+  title.textContent = "Vòng quay";
+  label.textContent = pendingEffect.desc || "";
+
+  // Hiện overlay wheel nhưng KHÔNG quay
+  backdrop.style.display = "flex";
+  inSpin = true;
+
+  // Reset canvas hiển thị lúc đầu
+  if (ctx) drawWheel(ctx, ["1","2","3","4","5","6"], 0); // vẽ placeholder; không quan trọng
+
+  // Chuẩn bị nút Spin
+  if (spinBtn) {
+    spinBtn.disabled = false;
+    spinBtn.textContent = "Spin";
+    spinBtn.onclick = async () => {
+      // Sau khi bấm Spin: chạy effect (tự gọi spin* bên trong nếu cần)
+      spinBtn.disabled = true;
+      await pendingEffect.run(); // sẽ gọi spinTeamWheel/spinDeltaWheel nếu requiresSpin
+
+      // đổi sang Exit
+      spinBtn.disabled = false;
+      spinBtn.textContent = "Exit";
+      // Bấm Exit: tắt cả 2 popup (quiz + wheel) và clear pending
+      spinBtn.onclick = () => {
+        backdrop.style.display = "none";
+        inSpin = false;
+
+        // ẩn nút “You got smthg”
+        if (quizEffectBtn) quizEffectBtn.style.display = "none";
+
+        // đóng luôn popup quiz
+        quizBackdrop.style.display = "none";
+        inQuiz = false;
+
+        pendingEffect = null;
+      };
+    };
+  }
+});
+
 
 const TWO_PI = Math.PI * 2;
 
@@ -113,7 +262,7 @@ function spinWheel({ labels, title: modalTitle, durationMs = 5000 }) {
         cancelAnimationFrame(rafId);
         setTimeout(() => {
           inSpin = false;
-          backdrop.style.display = "none";
+          //backdrop.style.display = "none";
           resolve(targetIndex);
         }, 250);
       }
@@ -461,20 +610,24 @@ async function openCell(x, y) {
 
   // Mìn chưa gỡ → thử effect "khi mở bom"
   if (cell.mine && !cell.defused) {
-    const msgOpen = await applyEffectOpenMineWithMsg();
-    if (msgOpen) {
-      suppressSuccessEffectThisTurn = true; // đã có effect trước-quiz → chặn effect sau-quiz
-      // đánh dấu đã gỡ (KHÔNG cộng điểm)
+    const got = await prepareEffectOnOpenMine(); // NEW: tạo pendingEffect nếu có
+    if (got) {
+      suppressSuccessEffectThisTurn = true;
+
+      // đánh dấu đã gỡ (KHÔNG cộng điểm) như cũ
       cell.defused = true;
       cell.opened = true;
       defusedCount += 1;
       defusedEl.textContent = String(defusedCount);
       mineCountEl.textContent = String(MINE_COUNT - defusedCount);
 
-      alert(`Hiệu ứng khi mở bom:\n${msgOpen}`);
+      // Cho hiện nút "You got smthg"
+      if (quizEffectBtn) quizEffectBtn.style.display = "inline-flex";
+
       checkBoardCleared();
-      return "opened"; // để onTileClick() switchTeam()
+      return "opened"; // để đổi lượt như cũ
     }
+
 
     // Không trúng effect mở bom → vào quiz
     inQuiz = true;
@@ -635,12 +788,10 @@ async function finishQuiz(success, explanation, keepOpen = true) {
 
     // Nếu CHƯA có effect “mở bom” thì mới xét effect “sau khi gỡ”
     if (!suppressSuccessEffectThisTurn && Math.random() < EFFECT_ON_SUCCESS_RATE) {
-      const m = await runSuccessEffectAndGetMsg();
-      if (m) {
-        const extra = `\n\nHiệu ứng sau khi gỡ:\n${m}`;
-        quizExplainEl.textContent = (quizExplainEl.textContent || "") + extra;
-      }
+      pendingEffect = await makeSuccessPendingEffect(); // NEW
+      if (quizEffectBtn) quizEffectBtn.style.display = "inline-flex";
     }
+
 
     // đổi lượt
     switchTeam();
