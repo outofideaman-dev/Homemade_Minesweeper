@@ -661,7 +661,7 @@ async function finishQuiz(success, explanation, keepOpen = true) {
 
   quizExplainEl.textContent = (explanation && explanation.trim())
     ? explanation.trim()
-    : "Không có giải thích.";
+    : "--";
 
   const { x, y } = pendingCell || {};
   pendingCell = null;
@@ -842,4 +842,3 @@ async function startGame() {
   updateTurnUI();
   newBoard();
 }
-
