@@ -286,3 +286,7 @@ footer { justify-content: center; color: var(--muted); }
 #wheel-backdrop {
   z-index: 10050 !important;
 }
+
+#quiz-effect-btn {
+  position: relative; /* để theo layout của footer */
+}
