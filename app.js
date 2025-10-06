@@ -128,11 +128,12 @@ function spinWheel({ labels, durationMs = 5000 }) {
   });
 }
 
-// Vòng quay 5 team (T1, T2, T3, T4, T6)
+// Vòng quay 5 team: hiển thị "1, 2, 3, 4, 6"
 function spinTeamWheel() {
-  const labels = groupNames.map(n => n.replace("Group ", "T"));
-  return spinWheel({ labels }).then(idx => idx); // 0..4
+  const labels = ["1","2","3","4","6"];           // hiển thị đúng
+  return spinWheel({ labels }).then(idx => idx);   // trả về index 0..4 khớp groupNames
 }
+
 
 // Vòng quay delta -2..+3
 function spinDeltaWheel() {
@@ -363,16 +364,16 @@ function openWheelForPendingEffect(closeQuizAfterExit = false) {
   label.textContent = pendingEffect.desc || "";
   backdrop.style.display = "flex";
 
-  if (ctx) drawWheel(ctx, ["1","2","3","4","5","6"], 0); // chỉ là placeholder vòng tròn
+  // ⬇️ Placeholder đúng 1,2,3,4,6 (không có 5)
+  if (ctx) drawWheel(ctx, ["1","2","3","4","6"], 0);
 
-  // Nút Spin
+  // Nút Spin ...
   spinBtn.disabled = false;
   spinBtn.textContent = "Spin";
   spinBtn.onclick = async () => {
     spinBtn.disabled = true;
-    const msg = await pendingEffect.run(); // sẽ tự gọi spinTeamWheel/spinDeltaWheel nếu cần
+    const msg = await pendingEffect.run();
     if (label) label.textContent = msg || (pendingEffect.desc || "");
-
     spinBtn.disabled = false;
     spinBtn.textContent = "Exit";
     spinBtn.onclick = () => {
@@ -385,6 +386,7 @@ function openWheelForPendingEffect(closeQuizAfterExit = false) {
     };
   };
 }
+
 
 // Tạo pending effect cho CASE "mở mìn" (trước quiz).
 // -1 điểm & Đổi điểm → MỞ WHEEL NGAY (không tự quay)
@@ -825,4 +827,3 @@ async function startGame() {
   updateTurnUI();
   newBoard();
 }
-
