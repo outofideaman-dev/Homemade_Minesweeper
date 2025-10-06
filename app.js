@@ -7,8 +7,8 @@ const GROUPS = 5;
 const groupNames = ["Group 1", "Group 2", "Group 3", "Group 4", "Group 6"];
 
 // Effect rates
-const EFFECT_ON_OPEN_RATE = 0;    // Xác suất hiệu ứng NGAY KHI mở phải bom (trước quiz)
-const EFFECT_ON_SUCCESS_RATE = 1; // Xác suất hiệu ứng SAU KHI gỡ thành công (sau quiz)
+const EFFECT_ON_OPEN_RATE = 0.3;    // Xác suất hiệu ứng NGAY KHI mở phải bom (trước quiz)
+const EFFECT_ON_SUCCESS_RATE = 0.3; // Xác suất hiệu ứng SAU KHI gỡ thành công (sau quiz)
 
 // ===== Wheel DOM & state =====
 let inSpin = false;                        // chặn thao tác khi đang quay (đang animate)
@@ -842,3 +842,4 @@ async function startGame() {
   updateTurnUI();
   newBoard();
 }
+
