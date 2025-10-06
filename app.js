@@ -1,4 +1,4 @@
-/ Minesweeper-like Web Game — 5 Groups, no global timer, no leaderboard
+// Minesweeper-like Web Game — 5 Groups, no global timer, no leaderboard
 const SIZE = 16;
 const MINE_COUNT = 40;
 const DEFUSE_SECONDS = 30;
@@ -392,7 +392,11 @@ function openWheelForPendingEffect(closeQuizAfterExit = false) {
 // -1 điểm & Đổi điểm → MỞ WHEEL NGAY (không tự quay)
 // +2 điểm → CHỈ ALERT (không wheel)
 async function prepareEffectOnOpenMine() {
-  if (Math.random() >= EFFECT_ON_OPEN_RATE) return false;
+  if (EFFECT_ON_OPEN_RATE <= 0) {
+    // console.debug('[guard] onOpen disabled: EFFECT_ON_OPEN_RATE=', EFFECT_ON_OPEN_RATE);
+    return false;
+  }
+  if (EFFECT_ON_OPEN_RATE < 1 && Math.random() >= EFFECT_ON_OPEN_RATE) return false;
 
   const eff = randint(3) + 1;
 
@@ -562,6 +566,7 @@ quizCloseBtn.onclick = () => {
   inQuiz = false;
   if (quizEffectBtn) quizEffectBtn.style.display = "none";
   pendingEffect = null;
+  suppressSuccessEffectThisTurn = false;
   if (endGamePending) {
     endGamePending = false;
     endGame(); // chỉ công bố khi bấm Thoát ở câu cuối
@@ -675,17 +680,24 @@ async function finishQuiz(success, explanation, keepOpen = true) {
     scores[turn] += 1;
     updateTurnUI();
 
-    // Nếu CHƯA có effect “mở bom” thì mới xét effect “sau khi gỡ”
-    if (!suppressSuccessEffectThisTurn && Math.random() < EFFECT_ON_SUCCESS_RATE) {
-      pendingEffect = await makeSuccessPendingEffect(); // reveal có thể đã alert + đóng quiz (trả null)
-      if (pendingEffect) {
-        // success:delta → có wheel, hiển thị nút để người chơi tự bật wheel
-        if (quizEffectBtn) quizEffectBtn.style.display = "inline-flex";
+    if (EFFECT_ON_SUCCESS_RATE > 0 && !suppressSuccessEffectThisTurn) {
+      // =1 => luôn chạy; 0<rate<1 => random; =0 => đã bị chặn ở điều kiện ngoài
+      const pass = (EFFECT_ON_SUCCESS_RATE >= 1) || (Math.random() < EFFECT_ON_SUCCESS_RATE);
+      if (pass) {
+        pendingEffect = await makeSuccessPendingEffect(); // reveal có thể đã alert + đóng quiz (trả null)
+        if (pendingEffect) {
+          // success:delta → có wheel, hiển thị nút để người chơi tự bật wheel
+          if (quizEffectBtn) quizEffectBtn.style.display = "inline-flex";
+        } else {
+          // nếu không có pendingEffect (case reveal) đảm bảo nút ẩn
+          if (quizEffectBtn) quizEffectBtn.style.display = "none";
+        }
       } else {
-        // nếu không có pendingEffect (case reveal) đảm bảo nút ẩn
+        // không trúng rate → ẩn nút nếu đang hiện
         if (quizEffectBtn) quizEffectBtn.style.display = "none";
       }
     }
+
 
     // đổi lượt
     switchTeam();
@@ -798,6 +810,7 @@ function parseQuestions(text) {
 }
 
 async function startGame() {
+
   if (running) return;
 
   if (!questionsLoaded) {
@@ -815,6 +828,8 @@ async function startGame() {
   endGamePending = false;
   pendingEffect = null;
   suppressSuccessEffectThisTurn = false;
+  inSpin = false;         
+  inQuiz = false; 
 
   // Ẩn nút effect trong quiz (nếu đang hiện)
   if (quizEffectBtn) quizEffectBtn.style.display = "none";
@@ -827,4 +842,3 @@ async function startGame() {
   updateTurnUI();
   newBoard();
 }
-
