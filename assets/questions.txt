@@ -1,232 +1,269 @@
 1
-Bối cảnh nào không phải là sức ép trực tiếp dẫn tới việc Đại hội V phải “bổ sung đường lối chung”?
-A. Bao vây cấm vận và tuyên truyền xuyên tạc về Campuchia
-B. Khủng hoảng kinh tế–xã hội trong nước trầm trọng
-C. Xu thế cải tổ ở Liên Xô và Đông Âu đang sụp đổ hoàn toàn
-D. Nhu cầu điều chỉnh nhận thức về chặng đường quá độ đầu tiên
-ANSWER: C
-#
+Đại hội X của Đảng Cộng sản Việt Nam diễn ra vào thời gian nào?
+A. 12–19/01/2011 tại Hà Nội
+B. 18–25/04/2006 tại Hà Nội
+C. 15–22/04/2001 tại TP.HCM
+D. 19–26/01/2016 tại Hà Nội
+ANSWER: B
+# Đại hội X diễn ra 18–25/4/2006 tại Hà Nội, theo văn kiện ĐH X.
 
 2
-Lập luận nào phù hợp với tinh thần “chặng đường đầu tiên của thời kỳ quá độ” mà Đại hội V nêu?
-A. Hoàn thành cải tạo XHCN cả nước trong vài năm
-B. Qua nhiều chặng, lâu dài; trước mắt tập trung 1981–1985 và kéo dài sang 1990s
-C. Bỏ nông nghiệp, đẩy mạnh công nghiệp nặng
-D. Thả nổi thị trường, Nhà nước không vai trò
+Thành tựu nổi bật về kinh tế trước Đại hội X (2006) là gì?
+A. Việt Nam đã trở thành nước công nghiệp mới nổi (NICs)
+B. Nông nghiệp cơ bản đủ ăn, công nghiệp – dịch vụ phát triển, GDP tăng 7–8%/năm
+C. Đã gia nhập WTO và tăng trưởng hai con số
+D. Xuất khẩu dầu mỏ chiếm tỷ trọng quyết định trong GDP
 ANSWER: B
-#
+# GDP tăng bình quân 7,5%/năm, nông nghiệp đủ ăn, công nghiệp – dịch vụ tăng trưởng mạnh.
 
 3
-Theo tinh thần điều chỉnh cơ cấu thời kỳ Đại hội V, tổ hợp lựa chọn đúng là:
-A. Nông nghiệp – hàng tiêu dùng – một số công nghiệp nặng trọng điểm
-B. Chỉ công nghiệp nặng
-C. Hàng xa xỉ – tài chính – bất động sản
-D. Hạn chế nông nghiệp
-ANSWER: A
-#
+Một hạn chế lớn của kinh tế Việt Nam trước 2006 là:
+A. Xuất khẩu nông sản chưa ra thế giới
+B. Phụ thuộc nhiều vào vốn FDI và khai khoáng
+C. Công nghiệp hóa đã hoàn tất nhưng thiếu bền vững
+D. Không thu hút được đầu tư trong nước
+ANSWER: B
+# Kinh tế phụ thuộc nhiều vào vốn đầu tư và khai khoáng, công nghiệp chế biến – dịch vụ chưa mạnh.
 
 4
-Điểm nhìn nhận chưa đầy đủ của Đại hội V (sau này được điều chỉnh) là:
-A. Thừa nhận quy luật hàng hoá–tiền tệ
-B. Kết hợp kế hoạch với thị trường
-C. Nền kinh tế nhiều thành phần
-D. Cải tạo XHCN miền Nam 5 năm
-ANSWER: C
-#
+Chủ đề của Đại hội X là gì?
+A. Phát huy dân chủ, tăng cường pháp luật, hội nhập quốc tế
+B. Nâng cao năng lực lãnh đạo và sức chiến đấu của Đảng, phát huy sức mạnh toàn dân tộc, đẩy mạnh đổi mới, sớm đưa nước ta ra khỏi tình trạng kém phát triển
+C. Công nghiệp hóa, hiện đại hóa, hội nhập kinh tế quốc tế
+D. Xây dựng Đảng trong sạch, nâng cao đời sống nhân dân
+ANSWER: B
+# Văn kiện ĐH X khẳng định đây là chủ đề chính trị trung tâm của Đại hội.
 
 5
-Bộ ba “giá–lương–tiền” được chạm tới mạnh nhất tại:
-A. Hội nghị Trung ương 6 (7/1984)
-B. Hội nghị Trung ương 7 (12/1984)
-C. Hội nghị Trung ương 8 (1985)
-D. Bộ Chính trị 8/1986
-ANSWER: C
-#
+Đại hội X đã bổ sung mấy đặc trưng mới của CNXH so với Cương lĩnh 1991?
+A. 1 đặc trưng
+B. 2 đặc trưng
+C. 3 đặc trưng
+D. 4 đặc trưng
+ANSWER: B
+# Bổ sung 2 đặc trưng: (1) Dân giàu, nước mạnh, dân chủ, công bằng, văn minh; (2) Nhà nước pháp quyền XHCN.
 
 6
-Vì sao điều chỉnh “giá–lương–tiền” làm khủng hoảng nặng hơn?
-A. Thực hiện quá chậm
-B. Vội đổi tiền, tổng điều chỉnh khi chưa chuẩn bị
-C. Không đụng tới giá
-D. Chỉ tập trung lương
+Đại hội X khẳng định: đại đoàn kết toàn dân tộc dựa trên liên minh nào?
+A. Công nhân – Nông dân – Doanh nhân
+B. Công nhân – Nông dân – Trí thức
+C. Công nhân – Nông dân – Quân đội
+D. Công nhân – Nông dân – Thanh niên
 ANSWER: B
-#
+# Nền tảng đoàn kết là liên minh công nhân – nông dân – trí thức.
 
 7
-Nhận định nào về cơ chế quản lý theo kết luận 8/1986 là sai?
-A. Đổi mới kế hoạch hoá, dùng quy luật hàng hoá–tiền tệ
-B. Tăng quyền tự chủ sản xuất–kinh doanh cho đơn vị
-C. Phân bổ nguồn lực chủ yếu bằng mệnh lệnh hành chính
-D. Cơ chế quản lý phải “ăn khớp” với bố trí lại cơ cấu kinh tế
+Đại hội X lần đầu tiên chỉ ra đầy đủ mấy nguy cơ lớn?
+A. 2 nguy cơ
+B. 3 nguy cơ
+C. 4 nguy cơ
+D. 5 nguy cơ
 ANSWER: C
-#
+# Bốn nguy cơ: tụt hậu xa về kinh tế, diễn biến hòa bình, tham nhũng – quan liêu, xa rời mục tiêu XHCN.
 
 8
-Nguyên nhân trực tiếp chậm giải quyết lương thực–thực phẩm, hàng thiết yếu giai đoạn 1981–1986 là:
-A. Bão lũ
-B. Chủ trương quá lớn, nhịp độ/quy mô dàn trải
-C. Lạm phát nhập khẩu
-D. Thiếu lao động
-ANSWER: B
-#
+Quan điểm an ninh được Đại hội X đề ra là gì?
+A. Chỉ bảo vệ biên giới, phòng thủ bên ngoài
+B. Chủ yếu dựa vào quân sự
+C. An ninh gồm chính trị, kinh tế, văn hóa, tư tưởng, cả trong và ngoài; bằng nhiều biện pháp, sức mạnh tổng hợp toàn dân
+D. Chủ yếu là quan hệ đối ngoại
+ANSWER: C
+# Đại hội X mở rộng khái niệm an ninh toàn diện, không chỉ giới hạn ở quân sự.
 
 9
-Cặp nguyên nhân khách quan–chủ quan khớp với tổng kết 1975–1986 là:
-A. Toàn cầu hoá; thừa nhận nhiều thành phần
-B. Bao vây cấm vận, hậu quả chiến tranh; sai lầm mục tiêu–bước đi–cơ cấu–cải tạo
-C. Dư thừa viện trợ; không đổi tiền
-D. Giá dầu tăng; thắt chặt tiền tệ quá mức
-ANSWER: B
-#
+Sự kiện đối ngoại quan trọng năm 2006 khẳng định vị thế quốc tế của Việt Nam là:
+A. Gia nhập ASEAN
+B. Gia nhập WTO
+C. Tổ chức thành công APEC tại Hà Nội
+D. Bình thường hóa quan hệ Việt – Mỹ
+ANSWER: C
+# Việt Nam đăng cai thành công APEC 2006, khẳng định vị thế đối ngoại.
 
 10
-Yêu cầu “lựa chọn bước đi, hình thức thích hợp” trong cải tạo XHCN xuất phát từ:
-A. Cần làm một lần, càng nhanh càng tốt
-B. Thời kỳ quá độ có nhiều bước trung gian, từ nhỏ đến lớn
-C. Nhà nước không đủ quyền lực
-D. Thị trường tự điều tiết
+Ý nghĩa chính trị nổi bật của việc gia nhập WTO (2007) là:
+A. Tạo cơ hội xuất khẩu
+B. Khẳng định vị thế quốc tế, hội nhập toàn cầu sâu rộng
+C. Giúp miễn nhiễm khủng hoảng kinh tế
+D. Xóa bỏ cạnh tranh nội địa
 ANSWER: B
-#
+# WTO mở ra hội nhập sâu rộng, nâng cao vị thế quốc tế Việt Nam.
 
 11
-So với TƯ6–7 (1984), bước 1985–1986 có tính chất:
-A. Nới lỏng nhưng giữ bao cấp hiện vật
-B. Khẳng định “một giá”, xóa bao cấp hiện vật
-C. Tiếp tục “mua thấp bán thấp và bù lỗ”
-D. Không đụng thị trường tự do
-ANSWER: B
-#
+Nhiệm vụ then chốt của Đại hội X là:
+A. Xây dựng, chỉnh đốn Đảng
+B. Đấu tranh chống tham nhũng
+C. Xây dựng đội ngũ cán bộ
+D. Xây dựng Nhà nước pháp quyền
+ANSWER: A
+# Đại hội xác định xây dựng, chỉnh đốn Đảng là nhiệm vụ then chốt.
 
 12
-Hội nghị bất thường tháng 7/1986 của Ban Chấp hành Trung ương đã bầu ai giữ chức Tổng Bí thư?
-A. Trường Chinh
-B. Nguyễn Văn Linh
+Ai được bầu làm Tổng Bí thư tại Đại hội X?
+A. Nguyễn Phú Trọng
+B. Nông Đức Mạnh
 C. Đỗ Mười
-D. Lê Duẩn
-ANSWER: A
-#
+D. Trương Hòa Bình
+ANSWER: B
+# Nông Đức Mạnh tiếp tục giữ chức Tổng Bí thư khóa X.
 
 13
-So với các nghị quyết TƯ 6–7 năm 1984, những điều chỉnh chính sách trong giai đoạn 1985–1986 có đặc điểm nổi bật nào?
-A. Giải pháp tình thế
-B. Đặt nền cho đường lối đổi mới
-C. Quay lại bao cấp
-D. Tập trung công nghiệp nặng dàn trải
-ANSWER: B
-#
+Năm 2010, GDP Việt Nam đạt khoảng:
+A. 50 tỷ USD
+B. 80 tỷ USD
+C. 101,6 tỷ USD
+D. 200 tỷ USD
+ANSWER: C
+# GDP đạt 101,6 tỷ USD, gấp hơn 3 lần so với năm 2000.
 
 14
-Trong các nhận định sau về bối cảnh diễn ra Đại hội VI, đâu là nhận định không đúng?
-A. Khoa học–kỹ thuật phát triển, xu thế đối thoại tăng
-B. Liên Xô/Đông Âu đã sụp đổ ngay thời điểm Đại hội VI
-C. Việt Nam bị cấm vận, khủng hoảng
-D. Lương thực khan hiếm, lạm phát cao
+Thành tựu nổi bật về giáo dục giai đoạn 2006–2010 là:
+A. Xóa mù chữ toàn quốc
+B. Hoàn thành phổ cập THCS
+C. Phổ cập tiểu học muộn
+D. Tăng học phí toàn quốc
 ANSWER: B
-#
+# Năm 2010, tất cả tỉnh thành đạt chuẩn phổ cập THCS.
 
 15
-Nội dung nào không thuộc “năm phương hướng lớn phát triển kinh tế” theo Đại hội VI?
-A. Bố trí lại cơ cấu sản xuất
-B. Điều chỉnh cơ cấu đầu tư xây dựng và củng cố quan hệ sản xuất xã hội chủ nghĩa
-C. Mở rộng và nâng cao hiệu quả kinh tế đối ngoại
-D. Xoá bỏ hoàn toàn vai trò của kế hoạch hoá trong quản lý kinh tế
-ANSWER: D
-#
+Một bài học rút ra từ Đại hội X là:
+A. Chỉ dựa vào ngoại lực
+B. Đổi mới phải dựa trên chủ nghĩa Mác – Lênin, tư tưởng Hồ Chí Minh
+C. Tăng nợ công để phát triển
+D. Giảm dân chủ trong xã hội
+ANSWER: B
+# Đổi mới phải kiên định nền tảng tư tưởng Mác – Lênin, Hồ Chí Minh.
 
 16
-Nếu mục tiêu “đủ tiêu dùng và có tích luỹ”, lựa chọn không phù hợp là:
-A. Ba chương trình LTP–HTD–H XK
-B. Bố trí lại cơ cấu, điều chỉnh đầu tư
-C. Đẩy công nghiệp nặng dàn trải, bỏ nông nghiệp
-D. Mở rộng và nâng cao hiệu quả đối ngoại
-ANSWER: C
-#
+Đại hội XI diễn ra trong thời gian nào?
+A. 12–19/01/2011
+B. 18–25/04/2011
+C. 12–19/01/2006
+D. 18–25/01/2006
+ANSWER: A
+# ĐH XI họp tại Hà Nội từ 12–19/1/2011.
 
 17
-Sự kiện pháp lý–thể chế thu hút nguồn lực quốc tế đầu giai đoạn:
-A. Luật Doanh nghiệp
-B. Luật Đầu tư nước ngoài có hiệu lực 01/01/1988
-C. Thuế thu nhập cá nhân 1991
-D. Hiệp định Thương mại VN–Mỹ 2001
+Bối cảnh quốc tế khi Đại hội XI diễn ra là:
+A. Kinh tế thế giới tăng trưởng cao
+B. Khủng hoảng tài chính 2008–2009, nợ công tăng
+C. Chiến tranh lạnh tái diễn
+D. Kinh tế thế giới ổn định
 ANSWER: B
-#
+# Khủng hoảng tài chính toàn cầu 2008–2009 để lại hậu quả nặng nề.
 
 18
-Biện pháp tư tưởng–tổ chức ứng phó dao động do khủng hoảng XHCN thế giới:
-A. Bỏ nền tảng tư tưởng
-B. Chính thức dùng khái niệm “hệ thống chính trị”, tăng nghiên cứu lý luận
-C. Thu hẹp công tác tư tưởng
-D. Ngừng đào tạo cán bộ
-ANSWER: B
-#
+Đến năm 2010, Việt Nam đã chính thức trở thành:
+A. Nước thu nhập trung bình thấp
+B. Nước công nghiệp hiện đại
+C. Nước phát triển G20
+D. Thành viên thường trực LHQ
+ANSWER: A
+# Việt Nam ra khỏi nhóm kém phát triển, trở thành nước thu nhập trung bình thấp.
 
 19
-Chế độ phân phối theo tem phiếu được xoá bỏ vào thời điểm nào?
-A. Đầu năm 1987
-B. Giữa năm 1988
-C. Cuối năm 1988
-D. Đầu năm 1989
-ANSWER: C
-#
+Mục tiêu tổng quát Đại hội XI là:
+A. Đến 2020 cơ bản thành nước công nghiệp hiện đại
+B. Hoàn thành công nghiệp hóa 2011–2015
+C. Đặt trọng tâm vào nông nghiệp
+D. Tạm dừng đối ngoại
+ANSWER: A
+# Mục tiêu 2020: cơ bản trở thành nước công nghiệp theo hướng hiện đại.
 
 20
-Trong nông nghiệp sau Đại hội VI, biện pháp thể hiện gắn quyền lợi hộ nông dân là:
-A. Lương hiện vật
-B. Khoán 10
-C. Mua bắt buộc
-D. Bỏ giao đất
+Cương lĩnh 2011 khẳng định bài học lớn là:
+A. Đẩy mạnh CNH, HĐH
+B. Kết hợp sức mạnh dân tộc với sức mạnh thời đại
+C. Phát huy nội lực, khai thác ngoại lực
+D. Cả 3 đáp án trên
 ANSWER: B
-#
+# Bài học trọng tâm: kết hợp sức mạnh dân tộc và sức mạnh thời đại.
 
 21
-Dấu mốc công nghiệp–năng lượng tiêu biểu giai đoạn sau Đại hội VI:
-A. Thuỷ điện Sơn La hoàn tất
-B. Thuỷ điện Hoà Bình phát điện tổ máy số 1
-C. Đường ống Nam Côn Sơn vận hành
-D. Điện Cà Mau chạy khí
-ANSWER: B
-#
+Cương lĩnh 2011 nêu rõ xã hội XHCN là:
+A. Dân giàu, nước mạnh, dân chủ, công bằng, văn minh
+B. Kinh tế phát triển cao, QHSX tiến bộ
+C. Nhà nước pháp quyền XHCN
+D. Cả 3 đáp án trên
+ANSWER: D
+# Xã hội XHCN gồm cả ba đặc trưng: dân giàu, kinh tế hiện đại, nhà nước pháp quyền.
 
 22
-Dấu hiệu cho thấy kinh tế hàng hoá nhiều thành phần vận hành theo cơ chế thị trường có quản lý cuối thập niên 1980 là:
-A. Duy trì rộng rãi tem phiếu và cơ chế hai giá
-B. Xoá tem phiếu, thực hiện cơ chế một giá, mở rộng lưu thông hàng hoá
-C. Lập thêm nhiều trạm kiểm soát để hạn chế giao lưu hàng hoá
-D. Cấm hộ kinh doanh cá thể mở rộng sản xuất
-ANSWER: BANSWER: B
-#
+Cương lĩnh 2011 chỉ rõ mấy phương hướng cơ bản xây dựng CNXH?
+A. 6
+B. 7
+C. 8
+D. 9
+ANSWER: C
+# Văn kiện xác định 8 phương hướng cơ bản để xây dựng CNXH.
 
 23
-“Bốn giảm” xử lý rối ren phân phối–lưu thông (1987–1988) không gồm:
-A. Giảm bội chi ngân sách
-B. Giảm nhịp độ tăng giá
-C. Giảm lạm phát
-D. Giảm đầu tư FDI
-ANSWER: D
-#
+Ba đột phá chiến lược của Đại hội XI là:
+A. Thể chế – Nhân lực – Hạ tầng
+B. Thể chế – Nhân lực – Hệ thống chính trị
+C. Thể chế – Dân số – Năng lực cạnh tranh
+D. Thể chế – Hiệu quả sản xuất – Chính sách phát triển
+ANSWER: A
+# Đột phá: hoàn thiện thể chế, phát triển nhân lực, xây dựng hạ tầng đồng bộ.
 
 24
-Từ năm 1990, phương châm đối ngoại của Việt Nam được xác định là gì?
-A. Đóng cửa
-B. Chỉ hướng Tây Âu
-C. Thêm bạn, bớt thù
-D. Chỉ Liên Xô
-ANSWER: C
-#
+Vì sao cần phát triển nhanh nguồn nhân lực chất lượng cao?
+A. Vì thiếu lao động giản đơn
+B. Vì nhân lực chất lượng cao quyết định sức cạnh tranh
+C. Vì dân số quá ít
+D. Vì để thay thế công nghệ nhập khẩu trong 5 năm
+ANSWER: B
+# Nhân lực chất lượng cao là yếu tố quyết định trong hội nhập toàn cầu.
 
 25
-Biểu hiện hội nhập trong khai thác dầu khí thời kỳ đầu đổi mới:
-A. Tự lực khai thác dầu thô ngay từ đầu
-B. Liên doanh Việt – Xô khai thác những thùng dầu thô đầu tiên
-C. Bắt đầu xuất khẩu khí hoá lỏng quy mô lớn
-D. Khai thác khí thiên nhiên trong đất liền miền BắcANSWER: B
-#
+Đại hội XI nhấn mạnh hội nhập quốc tế theo hướng:
+A. Chỉ về kinh tế
+B. Toàn diện: kinh tế, chính trị, văn hóa, xã hội, quốc phòng, an ninh
+C. Chỉ ASEAN
+D. Chỉ quan hệ song phương
+ANSWER: B
+# Khác với ĐH X, ĐH XI mở rộng hội nhập toàn diện trên mọi lĩnh vực.
 
 26
-Mệnh đề kết nối tư tưởng – thể chế – mục tiêu đúng với Đại hội VI:
-A. Đổi nền tảng tư tưởng; ưu tiên công nghiệp nặng dàn trải
-B. Giữ nền tảng Mác–Lênin; đổi mới cơ chế quản lý theo hướng thị trường có quản lý; mục tiêu “đủ tiêu dùng và có tích luỹ”
-C. Bỏ kế hoạch hoá hoàn toàn
-D. Giảm vai trò lãnh đạo của Đảng
+Vấn đề cấp bách nhất NQ 12 (2012) về xây dựng Đảng là:
+A. Xây dựng đội ngũ cán bộ
+B. Ngăn chặn, đẩy lùi suy thoái tư tưởng, đạo đức, lối sống
+C. Xác định rõ trách nhiệm người đứng đầu
+D. Đổi mới giáo dục lý luận chính trị
 ANSWER: B
-#
+# NQ 12 xác định nguy cơ lớn là suy thoái tư tưởng, đạo đức, lối sống.
+
+27
+Công tác được xác định là nhiệm vụ thường xuyên của Đảng (NQ 14 – 2007) là:
+A. Phòng chống tham nhũng
+B. Kiểm tra, giám sát
+C. Công tác cán bộ
+D. Công tác tổ chức
+ANSWER: B
+# NQ 14 xác định kiểm tra, giám sát là nhiệm vụ quan trọng, thường xuyên.
+
+28
+Đại hội XI đã bầu ra BCH TƯ gồm:
+A. 160 chính thức, 25 dự khuyết
+B. 160 chính thức, 21 dự khuyết
+C. 175 chính thức, 25 dự khuyết
+D. 175 chính thức, 21 dự khuyết
+ANSWER: C
+# BCH TƯ XI gồm 175 chính thức, 25 dự khuyết.
+
+29
+Thành tựu đối ngoại thời kỳ ĐH XI là:
+A. Môi trường hòa bình được giữ vững
+B. Quan hệ đối ngoại mở rộng, đi vào chiều sâu
+C. Quan hệ ASEAN được củng cố
+D. Cả 3 đáp án trên
+ANSWER: D
+# Thành tựu đối ngoại bao gồm cả 3 nội dung trên.
+
+30
+Đến năm 2020, GDP Việt Nam tăng từ 136 tỷ USD (2011) lên khoảng:
+A. 200 tỷ USD
+B. 250 tỷ USD
+C. 343 tỷ USD
+D. 400 tỷ USD
+ANSWER: C
+# GDP năm 2020 đạt 343 tỷ USD, tăng gấp 2,5 lần so với 2011.
